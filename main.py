@@ -1,5 +1,3 @@
-# there will be 3 possible terms, and they are all hard to win
-
 import random
 
 COUNTRY = "Wrathia"
@@ -15,7 +13,7 @@ ARCHETYPES = { # actual parties will vary
 
 ADJECTIVE = {
 "Liberal": ("Free", "Social", "Democratic", "Liberal", "Civil", "Green"),
-"Nationalist": ("Untited", "National", "Strong", "Racist"), 
+"Nationalist": ("United", "Unified", "National", "Strong", "Racist"), 
 "Conservative": (COUNTRY, "United", "Old", "Traditional", "Moderate"), 
 "Capitalist": ("Capitalist", "Western", "Wealthy", "Open", "Economic"),
 "Socialist": ("Social", "Socialist", "Social", "Civil", "Blue", "Woke"),
@@ -26,9 +24,9 @@ NOUN = {
 "Liberal": ("Freedom", "Liberty", "Justice", "Equality", "Reform", "Democracy", "Rights"),
 "Nationalist": ("Restoration", "Front", "Strength", "Unity", "Nationalism", "Nationality"),
 "Conservative": ("Guard", "Continuity", "Engine", "World", "Land"),
-"Capitalist": ("Trade", "West", "Liberal", "Cash", "Money", "Bank", "Economy"),
+"Capitalist": ("Trade", "West", "Liberal", "Cash", "Money", "Bank", "Economy", "Privatization"),
 "Socialist": ("Equity", "Labor", "Welfare", "Life", "Health", "Education", "Ideal"),
-"Communist": ("Revolution", "Communism", "Tax", "Standard", "State"),
+"Communist": ("Revolution", "Communism", "Tax", "Standard", "State", "Nationalization"),
 }
 
 PARTIES = []
@@ -74,7 +72,7 @@ class Party():
 	def generate_party_leader(self):
 		# most politicians are male, especially in the conservative parties
 		first = random.choice(("Marcel", "Frens", "John", "Anita", "Lucian", "Alvin", "Kesaro", "Lileas", "Nia", "Gloria", "George", "Peter", "Monty", "Walter", "Remus", "Victor", "Alma", "Emerich", "Leon", "Patricio", "Serge"))
-		last = random.choice(("Johnson", "Ricter", "Smolak", "Clavin", "Hegel", "Kibener", "Smith", "Antony", "Wisci", "Washington", "Starmer", "Monsieur", "Capon", "Rayne"))
+		last = random.choice(("Jabĺonski", "Johnson", "Ricter", "Smolak", "Clavin", "Hegel", "Kibener", "Smith", "Antony", "Wisci", "Washington", "Starmer", "Monsieur", "Capon", "Rayne"))
 		if random.randint(1, 7) == 1:
 			last = {"Liberal": "Morgna", "Nationalist": "Whiteguy", "Conservative": "Tory", "Capitalist": "Tusk", "Socialist": "Marx", "Communist": "Malenyev"}[self.archetype]
 		return first + " " + last
@@ -156,4 +154,5 @@ for key in list(VOTER_ARCHETYPES.keys()):
 	print(key + "s:" + (" " * (20 - len(key))) + str(VOTER_ARCHETYPES[key] * 10000 + random.randint(0, 9999)))
 input("$ Press enter to continue: ")
 print()
+
 
