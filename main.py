@@ -11,32 +11,46 @@ ARCHETYPES = { # actual parties will vary
 "Communist": (-8, 5), # pro-east/illiberal
 }
 
-ADJECTIVE = {
+ADJECTIVE = { # adjectives for random party names
 "Liberal": ("Free", "Social", "Democratic", "Liberal", "Civil", "Green"),
 "Nationalist": ("United", "Unified", "National", "Strong", "Racist"), 
-"Conservative": (COUNTRY, "United", "Old", "Traditional", "Moderate"), 
+"Conservative": ("United", "Old", "Traditional", "Moderate"), 
 "Capitalist": ("Capitalist", "Western", "Wealthy", "Open", "Economic"),
 "Socialist": ("Social", "Socialist", "Social", "Civil", "Blue", "Woke"),
 "Communist": ("People's", "Worker's", "Communist", "Comrade", "Red"),
 }
 
-NOUN = {
+NOUN = { # mouns for random party names
 "Liberal": ("Freedom", "Liberty", "Justice", "Equality", "Reform", "Democracy", "Rights"),
 "Nationalist": ("Restoration", "Front", "Strength", "Unity", "Nationalism", "Nationality"),
-"Conservative": ("Guard", "Continuity", "Engine", "World", "Land"),
+"Conservative": ("Guard", "Continuity", "Engine", "World", "Land", "Constitution", COUNTRY),
 "Capitalist": ("Trade", "West", "Liberal", "Cash", "Money", "Bank", "Economy", "Privatization"),
 "Socialist": ("Equity", "Labor", "Welfare", "Life", "Health", "Education", "Ideal"),
 "Communist": ("Revolution", "Communism", "Tax", "Standard", "State", "Nationalization"),
+}
+
+MOTTOS = { # party mottos, these do not have ending punctuation so they can be spoken in different contexts
+"Liberal": ("Freedom, liberty, equality for all", "Life, liberty, pursuit of happiness", "Democracy, above all", "Civil rights and liberty for all", "Peace and harmony"),
+"Nationalist": ("Above all, one", "One people, one nation, one identity", "We are our country, our country is us", "National pride, above all", "A strong, just nation"),
+"Conservative": ("The past brings stability", "Stability is progress", "Constitution, above all", "Rational change", "Stand on our own"),
+"Capitalist": ("The west is peace", "Wealth is happiness", "Poverty is chaos", "Supply and demand", "Regulation fails", "Liberty, above all"),
+"Socialist": ("Equity and welfare for all", "Democracy, welfare, peace", "Voice of the unheard", "Equity, above all", "Rights beyond paper"),
+"Communist": ("Death to the west", "The east will bring life", "Communism will bury you", "Revolution is inevitable", "We are the will of the people", "Statism, above all"),
 }
 
 PARTIES = []
 
 class Party():
 	# a political party
-	def __init__(self, archetype, name=None, leader=None):
+	def __init__(self, archetype, name=None, leader=None, motto=None):
 		self.archetype = archetype # define this beforehand
 		self.economy = ARCHETYPES[archetype][0] + random.randint(-3, 3)
 		self.social = ARCHETYPES[archetype][1] + random.randint(-2, 2)
+		# get motto
+		self.motto = motto
+		if motto == None:
+			self.motto = random.choice(MOTTOS[archetype])
+		# get name
 		self.name = name
 		if name == None:
 			self.name = self.generate_name()
@@ -70,9 +84,9 @@ class Party():
 		])
 		
 	def generate_party_leader(self):
-		# most politicians are male, especially in the conservative parties
-		first = random.choice(("Marcel", "Frens", "John", "Anita", "Lucian", "Alvin", "Kesaro", "Lileas", "Nia", "Gloria", "George", "Peter", "Monty", "Walter", "Remus", "Victor", "Alma", "Emerich", "Leon", "Patricio", "Serge"))
-		last = random.choice(("Jabĺonski", "Johnson", "Ricter", "Smolak", "Python", "Hegel", "Kibener", "Smith", "Antony", "Wisci", "Washington", "Starmer", "Monsieur", "Capon", "Rayne"))
+		# generates a name for the party's leader
+		first = random.choice(("Marcel", "Frens", "John", "Anita", "Lucian", "Alvin", "Kesaro", "Lileas", "Nia", "Gloria", "George", "Peter", "Monty", "Walter", "Remus", "Victor", "Alma", "Emerich", "Leon", "Patricio", "Serge", "Clark", "Manual", "Kennedy"))
+		last = random.choice(("Jabĺonski", "Johnson", "Ricter", "Smolak", "Python", "Hegel", "Kibener", "Smith", "Antony", "Wisci", "Washington", "Starmer", "Monsieur", "Capon", "Rayne", "Macron"))
 		if random.randint(1, 7) == 1:
 			last = {"Liberal": "Clavin", "Nationalist": "White", "Conservative": "Tory", "Capitalist": "Tusk", "Socialist": "Marx", "Communist": "Saltin"}[self.archetype]
 		return first + " " + last
@@ -108,6 +122,7 @@ for _ in range(random.randint(2, 4)):
 	PARTIES.append(party)
 	print(party.name + " (" + party.initials + ")")
 	print("Leader: " + party.leader + ", Policies: " + party.archetype)
+	print(party.motto + ".")
 print("—")
 input("$ Press enter to continue: ")
 print()
@@ -162,3 +177,4 @@ for key in list(VOTER_ARCHETYPES.keys()):
 	print(key + "s:" + (" " * (20 - len(key))) + str(VOTER_ARCHETYPES[key] * 10000 + random.randint(0, 9999)))
 input("$ Press enter to continue: ")
 print()
+# now, create a new party
