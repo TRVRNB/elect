@@ -142,6 +142,14 @@ for _ in range(random.randint(350, 500)):
 	voter = Voter(economy, social)
 	VOTERS.append(voter)
 	VOTER_ARCHETYPES[archetype] += 1
+# extra liberals and conservatives
+for _ in range(100):
+	archetype = random.choice(("Liberal", "Conservative"))
+	economy = ARCHETYPES[archetype][0]
+	social = ARCHETYPES[archetype][1]
+	voter = Voter(economy, social)
+	VOTERS.append(voter)
+	VOTER_ARCHETYPES[archetype] += 1
 # finally, true independents
 for _ in range(random.randint(75, 150)):
 	economy = random.randint(-10, 10)
@@ -154,5 +162,3 @@ for key in list(VOTER_ARCHETYPES.keys()):
 	print(key + "s:" + (" " * (20 - len(key))) + str(VOTER_ARCHETYPES[key] * 10000 + random.randint(0, 9999)))
 input("$ Press enter to continue: ")
 print()
-
-
