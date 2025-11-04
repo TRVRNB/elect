@@ -88,6 +88,22 @@ class Party():
 			last = {"Liberal": "Clavin", "Nationalist": "White", "Conservative": "Tory", "Capitalist": "Tusk", "Socialist": "Marx", "Communist": "Saltin"}[self.archetype]
 		return first + " " + last
 	
+	def move_politics(intensity=1.0, economy=None, social=None):
+		# move the politics to a certain point
+		if economy != none:
+			if self.economy > economy + intensity:
+				self.economy -= intensity
+			elif self.economy < economy - intensity:
+				self.economy += intensity
+			else:
+				self.economy = economy
+		if social != none:
+			if self.social > social + intensity:
+				self.social -= intensity
+			elif self.social < social - intensity:
+				self.social += intensity
+			else:
+				self.social = social
 
 class Voter():
 	# a voter who looks through the list of parties

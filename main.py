@@ -1,11 +1,69 @@
-import random, config
+import random, config, os, json, events
 from classes import Party, Voter
+
+# LOAD SAVE DATA
+if not os.path.exists("profile.json"):
+	NAME = ""
+	while NAME == "":
+		NAME = input("$ Enter your full name: ")
+	json_data = {"Name": NAME, "High score": 0}
+	with open("profile.json", "w") as json_file:
+		json.dump(json_data, json_file, indent=4)
+else:
+	with open("profile.json", "r") as file:
+		PROFILE_DATA = json.load(file)
+		NAME = PROFILE_DATA["Name"]
+
+
 
 COUNTRY = config.COUNTRY
 ARCHETYPES = config.ARCHETYPES
 
 PARTIES = []
 
+def dialogue(choices):
+	# get input from the player
+	for i in range(len(choices)):
+		print(str(i+1) + ") " + choices[i])
+	while True: # check if they chose a valid choice
+		choice = int(input("$ "))
+		if 0 < choice <= len(choices):
+			break
+	print()
+	return(choice)
+
+def do_event(event):
+	# do an event, this is a massive function!
+	global PLAYER_PARTY, VOTERS, EVENT_QUEUE, COMPLETED_EVENTS
+	match event:
+	
+		case "stance_renberg":
+			print("A neighboring country known as Renberg has been cracking down on 'traitors' lately, imprisoning civil rights leaders. You must decide the party's official stance.")
+			case "stance_renberg":
+				choice = dialogue({
+				"We must grant refuge to victims of Renberg's oppression"
+				"Their politics are their business"
+				"(publicly express approval for Rumburg's government)"
+				})
+			completed_events(stance_renberg) = choice
+			if choice == 1:
+				PLAYER_PARTY.LIBERAL += 0.5
+				PLAYER_PARTY.SOCIALIST += 0.5
+				PLAYER_PARTY.CONSERVATIVE -= 1.0
+				PLAYER_PARTY.NATIONALIST -= 2.5
+				PLAYER_PARTY.move_politics(0.25, social=-10)
+				print("Liberals and socialists are satisfied with your proactive response.")
+			elif choice == 2:
+				PLAYER_PARTY.SOCIALIST -= 0.5
+				PLAYER_PARTY.CONSERVATIVE += 2.0
+				PLAYER_PARTY.move_politics(1.25, social=0)
+				print("Conservatives are happy with your response.")
+			elif choice == 3:
+				PLAYER_PARTY.
+			
+	input("$ Press enter to continue: ")
+	print()
+	
 intro = "Welcome to " + COUNTRY + "! This is the 19" + str(38 + 4 * random.randint(1, 6)) + " General Election, and you are running for president. You will create and name a new party, determine its stance on several divisive political topics, and create a campaign!"
 # there will also be a political debate and a speech that heavily affect the charisma modifier
 # plus, chances to fabricate scandals, and a few scandals of your own to deal with
@@ -87,7 +145,6 @@ for key in list(VOTER_ARCHETYPES.keys()):
 input("$ Press enter to continue: ")
 print()
 # now, create a new party with you as the leader
-NAME = "Abraham Lincoln" # replace this with a profile system that also tracks high scores, and a running list of parties
 print("Now, it's time to create a new party, with you, " + NAME + ", as its leader!")
 party_name = "a"
 while party_name.strip()[0][0] == party_name.strip()[0][0].lower():
@@ -106,9 +163,23 @@ while len(party_motto) == 0:
 print()	
 # print this party, now
 party = Party("New Party", name=party_name, motto=party_motto, leader=NAME)
+party.archetype = party_name # make a new archetype out of the name (this can have funny results)
+for entry in ("party", "Party", COUNTRY, " of ", " and "):
+	party.archetype = party.archetype.replace(entry, "")
 PLAYER_PARTY = party # add this to PARTIES at the end when calculating election results
 party_text = party.name + " (" + party.initials + ")"
 print(party_text)
 print("Leader: " + party.leader + ", Policies: " + party.archetype)
 print(party.motto + ".")
 input("$ Press enter to continue: ")
+print()
+# intro events
+EVENT_QUEUE = []
+COMPLETED_EVENTS = {}
+for _ in range(3):
+	event = random.choice(events.INTRO_EVENTS)
+	events.INTRO_EVENTS.remove(event)
+	EVENT_QUEUE.append(event)
+# now, do these events
+for event in EVENT_QUEUE:
+	do_event(event)
