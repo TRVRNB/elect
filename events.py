@@ -1,5 +1,5 @@
 INTRO_EVENTS = [
-	"stance_renberg",
+	"stance_lavitia",
 	"stance_welfare",
 	"stance_minority",
 	"stance_agriculture",

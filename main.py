@@ -26,7 +26,11 @@ def dialogue(choices):
 	for i in range(len(choices)):
 		print(str(i+1) + ") " + choices[i])
 	while True: # check if they chose a valid choice
-		choice = int(input("$ "))
+		choice = input("$ ")
+		try:
+			choice = int(choice)
+		except ValueError:
+			continue
 		if 0 < choice <= len(choices):
 			break
 	print()
@@ -35,31 +39,110 @@ def dialogue(choices):
 def do_event(event):
 	# do an event, this is a massive function!
 	global PLAYER_PARTY, VOTERS, EVENT_QUEUE, COMPLETED_EVENTS
-	match event:
+	COMPLETED_EVENTS[event] = True
 	
-		case "stance_renberg":
-			print("A neighboring country known as Renberg has been cracking down on 'traitors' lately, imprisoning civil rights leaders. You must decide the party's official stance.")
-			case "stance_renberg":
-				choice = dialogue({
-				"We must grant refuge to victims of Renberg's oppression"
-				"Their politics are their business"
-				"(publicly express approval for Rumburg's government)"
-				})
-			completed_events(stance_renberg) = choice
-			if choice == 1:
-				PLAYER_PARTY.LIBERAL += 0.5
-				PLAYER_PARTY.SOCIALIST += 0.5
-				PLAYER_PARTY.CONSERVATIVE -= 1.0
-				PLAYER_PARTY.NATIONALIST -= 2.5
-				PLAYER_PARTY.move_politics(0.25, social=-10)
-				print("Liberals and socialists are satisfied with your proactive response.")
-			elif choice == 2:
-				PLAYER_PARTY.SOCIALIST -= 0.5
-				PLAYER_PARTY.CONSERVATIVE += 2.0
-				PLAYER_PARTY.move_politics(1.25, social=0)
-				print("Conservatives are happy with your response.")
-			elif choice == 3:
-				PLAYER_PARTY.
+	if event == "stance_lavitia":
+		print("A neighboring country known as Lavitia has been cracking down on 'traitors' lately, imprisoning civil rights leaders. You must decide the party's official stance.")
+		choice = dialogue((
+		"We must grant refuge to victims of Renberg's oppression",
+		"Their politics are their business",
+		"We will join them in this endeavor! Viva Lavitia!",
+		))
+		COMPLETED_EVENTS[event] = choice
+		if choice == 1:
+			PLAYER_PARTY.LIBERAL += 0.5
+			PLAYER_PARTY.SOCIALIST += 0.5
+			PLAYER_PARTY.CONSERVATIVE -= 1.0
+			PLAYER_PARTY.NATIONALIST -= 2.5
+			PLAYER_PARTY.move_politics(0.25, social=-10)
+			print("Liberals and socialists are satisfied with your proactive response.")
+		elif choice == 2:
+			PLAYER_PARTY.SOCIALIST -= 0.5
+			PLAYER_PARTY.CONSERVATIVE += 2.0
+			PLAYER_PARTY.move_politics(1.25, social=3)
+			print("Conservatives are happy with your response, but most see it as overly isolationist.")
+		elif choice == 3:
+			PLAYER_PARTY.SOCIALIST -= 2.75
+			PLAYER_PARTY.LIBERAL -= 2.75
+			PLAYER_PARTY.CONSERVATIVE -= 1.0
+			PLAYER_PARTY.NATIONALIST += 1.25
+			PLAYER_PARTY.COMMUNIST += 0.25
+			PLAYER_PARTY.CAPITALIST -= 0.5
+			PLAYER_PARTY.move_politics(3.0, social=10)
+			text = "You are seen as tyrannical."
+			for party in PARTIES:
+				if party.social <= -4:
+					text += " " + party.name + " denounces you."
+			print(text)
+		
+	if event == "stance_welfare":
+		print(COUNTRY + "'s welfare is at a crossroads, and your stance is crucial to attracting voters. Many want it expanded, due to the low quality of healthcare and education services, but capitalists mention that privatizing welfare could help drive growth, and competition could create better services overall. Conservatives want the system to stay as-is.")
+		choice = dialogue((
+		"No need to rock the boat, we won't privatize or expand our services",
+		"We'll increase spending modestly to improve services",
+		"A tax increase will be used to improve these services massively",
+		"Privatization will create capital and create competition in the process",
+		"A less-educated populace is easier to manage, so let's defund.",
+		))
+		COMPLETED_EVENTS[event] = choice
+		if choice == 1:
+			PLAYER_PARTY.LIBERAL -= 0.5
+			PLAYER_PARTY.SOCIALIST -= 2.5
+			PLAYER_PARTY.COMMUNIST -= 2.75
+			PLAYER_PARTY.CONSERVATIVE += 1.75
+			PLAYER_PARTY.CLASS1 -= 0.5
+			PLAYER_PARTY.CLASS2 += 0.5
+			PLAYER_PARTY.move_politics(0.5, economy=1, social=4)
+			print("Communists and socialists are angry, but most others seem to not care much.")
+		elif choice == 2:
+			PLAYER_PARTY.LIBERAL += 0.75
+			PLAYER_PARTY.SOCIALIST += 0.5
+			PLAYER_PARTY.COMMUNIST -= 0.5
+			PLAYER_PARTY.CONSERVATIVE -= 0.25
+			PLAYER_PARTY.CAPITALIST -= 1.0
+			PLAYER_PARTY.CLASS1 += 1.5
+			PLAYER_PARTY.CLASS2 += 0.5
+			PLAYER_PARTY.CLASS3 -= 1.0
+			PLAYER_PARTY.move_politics(1.5, economy=-3)
+			PLAYER_PARTY.move_politics(0.5, social=-4)
+			print("The public is overall happy with your stance, especially lower-class citizens.")
+		elif choice == 3:
+			PLAYER_PARTY.LIBERAL -= 1.5
+			PLAYER_PARTY.SOCIALIST += 1.25
+			PLAYER_PARTY.COMMUNIST -= 3.0
+			PLAYER_PARTY.CONSERVATIVE -= 2.75
+			PLAYER_PARTY.CAPITALIST -= 3.25
+			PLAYER_PARTY.CLASS1 += 2.5
+			PLAYER_PARTY.CLASS2 -= 0.5
+			PLAYER_PARTY.CLASS3 -= 4.0
+			PLAYER_PARTY.move_politics(2.5, economy=-7)
+			PLAYER_PARTY.move_politics(0.5, social=-4)
+			print("Socialists and communists are happy, but middle and upper-class citizens are outraged by the idea of a tax increase.")
+		elif choice == 4:
+			PLAYER_PARTY.LIBERAL -= 2.0
+			PLAYER_PARTY.SOCIALIST -= 3.0
+			PLAYER_PARTY.COMMUNIST -= 3.0
+			PLAYER_PARTY.CONSERVATIVE -= 1.75
+			PLAYER_PARTY.CAPITALIST += 4.0
+			PLAYER_PARTY.CLASS1 -= 4.0
+			PLAYER_PARTY.CLASS2 -= 2.0
+			PLAYER_PARTY.CLASS3 += 3.0
+			PLAYER_PARTY.move_politics(3.0, economy=10)
+			PLAYER_PARTY.move_politics(1.0, social=3)
+			print("Many are outraged, but capitalists are happy. Good thing you still have a whole campaign to get those other voters on your side.")
+		elif choice == 5:
+			PLAYER_PARTY.LIBERAL -= 4.0
+			PLAYER_PARTY.SOCIALIST -= 4.0
+			PLAYER_PARTY.COMMUNIST -= 4.0
+			PLAYER_PARTY.CONSERVATIVE -= 4.0
+			PLAYER_PARTY.CAPITALIST -= 4.0
+			PLAYER_PARTY.NATIONALIST += 1.5
+			PLAYER_PARTY.CLASS1 -= 5.0
+			PLAYER_PARTY.CLASS2 -= 5.0
+			PLAYER_PARTY.CLASS3 -= 3.0
+			PLAYER_PARTY.move_politics(2.5, economy=4)
+			PLAYER_PARTY.move_politics(4.0, social=10)
+			print("Everyone hated that. Why would you ever say that?")
 			
 	input("$ Press enter to continue: ")
 	print()
@@ -176,9 +259,7 @@ print()
 # intro events
 EVENT_QUEUE = []
 COMPLETED_EVENTS = {}
-for _ in range(3):
-	event = random.choice(events.INTRO_EVENTS)
-	events.INTRO_EVENTS.remove(event)
+for event in events.INTRO_EVENTS:
 	EVENT_QUEUE.append(event)
 # now, do these events
 for event in EVENT_QUEUE:

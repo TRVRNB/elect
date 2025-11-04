@@ -38,6 +38,9 @@ class Party():
 		self.charisma = 0
 		self.scandal = 0
 		self.get_default_opinions()
+		
+	def __eq__(self, other):
+		return self.name == other.name
 
 	def generate_name(self):
 		# return a name based on the political archetype
@@ -66,6 +69,9 @@ class Party():
 			self.SOCIALIST = 0
 			self.COMMUNIST = 0
 			self.INDEPENDENT = 5 # independents will always start out liking player parties
+			self.CLASS1 = 0
+			self.CLASS2 = 0
+			self.CLASS3 = 0
 			return
 		self.LIBERAL = 16.0 - config.TOLERANCE*self.get_political_difference(ARCHETYPES["Liberal"])
 		self.NATIONALIST = 10.0 - config.TOLERANCE*self.get_political_difference(ARCHETYPES["Nationalist"])
@@ -74,7 +80,10 @@ class Party():
 		self.SOCIALIST = 12.0 - config.TOLERANCE*self.get_political_difference(ARCHETYPES["Socialist"])
 		self.COMMUNIST = 8.0 - config.TOLERANCE*self.get_political_difference(ARCHETYPES["Communist"])
 		self.INDEPENDENT = -config.TOLERANCE*self.get_political_difference((0, 0))
-	
+		self.CLASS1 = -self.economy
+		self.CLASS2 = 0
+		self.CLASS3 = self.economy
+		
 	def get_political_difference(self, p):
 		# gets the difference between 2 points
 		return  math.sqrt((p[0] - self.economy)**2 + (p[1] - self.social)**2)
@@ -88,16 +97,16 @@ class Party():
 			last = {"Liberal": "Clavin", "Nationalist": "White", "Conservative": "Tory", "Capitalist": "Tusk", "Socialist": "Marx", "Communist": "Saltin"}[self.archetype]
 		return first + " " + last
 	
-	def move_politics(intensity=1.0, economy=None, social=None):
+	def move_politics(self, intensity=1.0, economy=None, social=None):
 		# move the politics to a certain point
-		if economy != none:
+		if economy != None:
 			if self.economy > economy + intensity:
 				self.economy -= intensity
 			elif self.economy < economy - intensity:
 				self.economy += intensity
 			else:
 				self.economy = economy
-		if social != none:
+		if social != None:
 			if self.social > social + intensity:
 				self.social -= intensity
 			elif self.social < social - intensity:
