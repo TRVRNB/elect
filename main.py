@@ -72,9 +72,9 @@ class Party():
 	def generate_party_leader(self):
 		# most politicians are male, especially in the conservative parties
 		first = random.choice(("Marcel", "Frens", "John", "Anita", "Lucian", "Alvin", "Kesaro", "Lileas", "Nia", "Gloria", "George", "Peter", "Monty", "Walter", "Remus", "Victor", "Alma", "Emerich", "Leon", "Patricio", "Serge"))
-		last = random.choice(("Jabĺonski", "Johnson", "Ricter", "Smolak", "Clavin", "Hegel", "Kibener", "Smith", "Antony", "Wisci", "Washington", "Starmer", "Monsieur", "Capon", "Rayne"))
+		last = random.choice(("Jabĺonski", "Johnson", "Ricter", "Smolak", "Python", "Hegel", "Kibener", "Smith", "Antony", "Wisci", "Washington", "Starmer", "Monsieur", "Capon", "Rayne"))
 		if random.randint(1, 7) == 1:
-			last = {"Liberal": "Morgna", "Nationalist": "Whiteguy", "Conservative": "Tory", "Capitalist": "Tusk", "Socialist": "Marx", "Communist": "Malenyev"}[self.archetype]
+			last = {"Liberal": "Clavin", "Nationalist": "White", "Conservative": "Tory", "Capitalist": "Tusk", "Socialist": "Marx", "Communist": "Saltin"}[self.archetype]
 		return first + " " + last
 	
 
