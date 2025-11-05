@@ -13,6 +13,8 @@ else:
 	with open("profile.json", "r") as file:
 		PROFILE_DATA = json.load(file)
 		NAME = PROFILE_DATA["Name"]
+		print("Welcome back, " + NAME + "!")
+print()
 
 
 
@@ -82,7 +84,7 @@ def do_event(event):
 		"We'll increase spending modestly to improve services",
 		"A tax increase will be used to improve these services massively",
 		"Privatization will create capital and create competition in the process",
-		"A less-educated populace is easier to manage, so let's defund.",
+		"A less-educated populace is easier to manage, so let's defund",
 		))
 		COMPLETED_EVENTS[event] = choice
 		if choice == 1:
@@ -144,6 +146,31 @@ def do_event(event):
 			PLAYER_PARTY.move_politics(4.0, social=10)
 			print("Everyone hated that. Why would you ever say that?")
 			
+		elif event == "stance_economy":
+			print("You must decide your party's stance on the economy. You can prioritize agricultural growth, industrial growth, or give tax credits to businesses.")
+			choice = dialogue((
+			"Agriculture will improve living standard and farmer rights",
+			"Industry will propel economic growth and create jobs",
+			"The world runs on private business, so let's give back",
+			))
+			COMPLETED_EVENTS[event] = choice
+			if choice == 1:
+				PLAYER_PARTY.CLASS1 += 3.0
+				PLAYER_PARTY.move_politics(1.5, economy=-10)
+				print("A new 'farmers for' " + NAME.split()[len(NAME.split())-1] + " ad aired during a sports game, without your input.")
+			elif choice == 2:
+				PLAYER_PARTY.CLASS2 += 3.0
+				PLAYER_PARTY.move_politics(1.5, economy=-5)
+				print("The middle-class rallies behind your promise, with over 20,000 attending.")
+			elif choice == 3:
+				# by far the most polarizing of the 3 options, making a clear pro-business stance
+				PLAYER_PARTY.SOCIALIST -= 2.5
+				PLAYER_PARTY.COMMUNIST -= 4.5
+				PLAYER_PARTY.CAPITALIST += 3.0
+				PLAYER_PARTY.CLASS3 += 3.0
+				PLAYER_PARTY.move_politics(2.5, economy=6)
+				print("Business leaders praise you. Famous oligarch Leon Tusk promises to offer some funds for your campaign.")
+
 	elif event == "stance_minority":
 		print("The minorities in " + COUNTRY + " have often been oppresed and persecuted, and only recently has the situation started to improve. They are still cold towards conservative and authoritarian parties. You can declare a stance, or you can remain neutral.")
 		choice = dialogue((
@@ -158,21 +185,46 @@ def do_event(event):
 			PLAYER_PARTY.SOCIALIST -= 1.0
 			PLAYER_PARTY.CONSERVATIVE += 2.5
 			PLAYER_PARTY.NATIONALIST += 0.5
+			PLAYER_PARTY.MINORITY -= 2.5
 			PLAYER_PARTY.move_politics(0.25, social=10)
 		elif choice == 2:
 			PLAYER_PARTY.LIBERAL += 1.5
 			PLAYER_PARTY.SOCIALIST += 1.0
 			PLAYER_PARTY.NATIONALIST -= 2.5
 			PLAYER_PARTY.CAPITALIST += 1.5 # capitalists support government investment
+			PLAYER_PARTY.MINORITY += 1.0
 			PLAYER_PARTY.move_politics(1.5, social=-6)
 			PLAYER_PARTY.move_politics(0.5, economy=-2)
-			print("Yesterday, there was a new political rally: Minorites for " + NAME + ".")
-
+			if COMPLETED_EVENTS["stance_lavitia"] != 3:
+				print("Yesterday, there was a new political rally: Minorites for " + NAME + ".")
+		elif choice == 3:
+			PLAYER_PARTY.LIBERAL -= 0.75
+			PLAYER_PARTY.SOCIALIST += 2.5
+			PLAYER_PARTY.COMMUNIST += 0.5
+			PLAYER_PARTY.CONSERVATIVE -= 1.0
+			PLAYER_PARTY.NATIONALIST -= 3.5
+			PLAYER_PARTY.CLASS1 += 2.5
+			PLAYER_PARTY.MINORITY += 3.0
+			PLAYER_PARTY.CAPITALIST -= 2.0 # capitalists support government investment
+			PLAYER_PARTY.move_politics(3.0, social=-10, economy=-10)
+			print("Yesterday, there was a new political rally: Minorites for " + NAME + ".")			
+		elif choice == 4:
+			PLAYER_PARTY.LIBERAL += 2.0
+			PLAYER_PARTY.SOCIALIST += 1.0
+			PLAYER_PARTY.NATIONALIST -= 2.5
+			PLAYER_PARTY.MINORITY += 1.5
+			PLAYER_PARTY.move_politics(1.5, social=-10)
+			if COMPLETED_EVENTS["stance_lavitia"] != 3:
+				print("Yesterday, there was a new political rally: Minorites for " + NAME + ".")
+			
 		for party in PARTIES:
 			if party.social <= -4:
 				print(party.name + " made a statement in support of civil rights.")
 	input("$ Press enter to continue: ")
 	print()
+	
+	
+	
 	
 intro = "Welcome to " + COUNTRY + "! This is the 19" + str(38 + 4 * random.randint(1, 6)) + " General Election, and you are running for president. You will create and name a new party, determine its stance on several divisive political topics, and create a campaign!"
 # there will also be a political debate and a speech that heavily affect the charisma modifier
@@ -276,6 +328,7 @@ party = Party("New Party", name=party_name, motto=party_motto, leader=NAME)
 party.archetype = party_name # make a new archetype out of the name (this can have funny results)
 for entry in ("party", "Party", COUNTRY, " of ", " and "):
 	party.archetype = party.archetype.replace(entry, "")
+party.archetype = party.archetype.strip()
 PLAYER_PARTY = party # add this to PARTIES at the end when calculating election results
 party_text = party.name + " (" + party.initials + ")"
 print(party_text)

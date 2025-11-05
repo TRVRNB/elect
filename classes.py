@@ -72,6 +72,7 @@ class Party():
 			self.CLASS1 = 0
 			self.CLASS2 = 0
 			self.CLASS3 = 0
+			self.MINORITY = 0
 			return
 		self.LIBERAL = 16.0 - config.TOLERANCE*self.get_political_difference(ARCHETYPES["Liberal"])
 		self.NATIONALIST = 10.0 - config.TOLERANCE*self.get_political_difference(ARCHETYPES["Nationalist"])
@@ -83,6 +84,7 @@ class Party():
 		self.CLASS1 = -self.economy
 		self.CLASS2 = 0
 		self.CLASS3 = self.economy
+		self.MINORITY = -self.social
 		
 	def get_political_difference(self, p):
 		# gets the difference between 2 points

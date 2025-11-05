@@ -1,5 +1,5 @@
 # config file
-COUNTRY = "Wrathia" # name of the country
+COUNTRY = "Warlen" # name of the country
 PARTY_COUNT = 3 # how many parties there should be, excluding the player
 TOLERANCE = 2.5 # how much opinion should be lost per point on the political compass apart
 
@@ -17,17 +17,17 @@ ADJECTIVE = { # adjectives for random party names
 "Nationalist": ("United", "Liberated", "National", "Strong", "Racist"), 
 "Conservative": ("United", "Old", "Traditional", "Moderate", "Geriatric", "Conventional"), 
 "Capitalist": ("Capitalist", "Western", "Wealthy", "Open", "Economic", "Oligarchic"),
-"Socialist": ("Social", "Socialist", "Social", "Civil", "Blue", "Woke"),
+"Socialist": ("Social", "Socialist", "Social", "Civil", "Blue", "Woke", "Idealist"),
 "Communist": ("People's", "Worker's", "Communist", "Tankie", "Red"),
 }
 
 NOUN = { # nouns for random party names
 "Liberal": ("Freedom", "Liberty", "Justice", "Equality", "Reform", "Democracy", "Rights", "Soy"),
-"Nationalist": ("Restoration", "Front", "Strength", "Unity", "Nationalism", "Nationality", "Power"),
+"Nationalist": ("Restoration", "Front", "Strength", "Unity", "Nationalism", "Nationality", "Power", "Strength"),
 "Conservative": ("Guard", "Continuity", "Engine", "World", "Land", "Constitution", COUNTRY),
 "Capitalist": ("Trade", "West", "Liberal", "Cash", "Money", "Bank", "Economy", "Privatization"),
 "Socialist": ("Equity", "Labor", "Welfare", "Life", "Health", "Education", "Ideal", "Socialism"),
-"Communist": ("Revolution", "Communism", "Tax", "Standards", "State", "Nationalization", "Comrade"),
+"Communist": ("Revolution", "Communism", "Tax", "Standards", "State", "Nationalization", "Comrade", "Menace", "Scare"),
 }
 
 MOTTOS = { # party mottos, these do not have ending punctuation so they can be spoken in different contexts
