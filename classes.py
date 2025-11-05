@@ -116,7 +116,8 @@ class Party():
 
 class Voter():
 	# a voter who looks through the list of parties
-	def __init__(self, economy=0, social=0, turnout=0.5, independent=False):
+	def __init__(self, archetype, economy=0, social=0, turnout=0.5, independent=False):
+		self.archetype = archetype
 		self.economy = economy # negative: socialism, positive: capitalism
 		self.economy += random.randint(-4, 4)
 		self.social = social # negative: liberal, positive: conservative

@@ -75,7 +75,7 @@ def do_event(event):
 					text += " " + party.name + " denounces you."
 			print(text)
 		
-	if event == "stance_welfare":
+	elif event == "stance_welfare":
 		print(COUNTRY + "'s welfare is at a crossroads, and your stance is crucial to attracting voters. Many want it expanded, due to the low quality of healthcare and education services, but capitalists mention that privatizing welfare could help drive growth, and competition could create better services overall. Conservatives want the system to stay as-is.")
 		choice = dialogue((
 		"No need to rock the boat, we won't privatize or expand our services",
@@ -144,6 +144,30 @@ def do_event(event):
 			PLAYER_PARTY.move_politics(4.0, social=10)
 			print("Everyone hated that. Why would you ever say that?")
 			
+	elif event == "stance_minority":
+		print("The minorities in " + COUNTRY + " have often been oppresed and persecuted, and only recently has the situation started to improve. They are still cold towards conservative and authoritarian parties. You can declare a stance, or you can remain neutral.")
+		choice = dialogue((
+		"(no statement)",
+		"We will invest government resources into development in minority areas",
+		"We will create universal basic income for minorities",
+		"We will improve the legal system to remove bias",
+		))
+		COMPLETED_EVENTS[event] = choice
+		if choice == 1:
+			PLAYER_PARTY.LIBERAL -= 0.5
+			PLAYER_PARTY.SOCIALIST -= 1.0
+			PLAYER_PARTY.CONSERVATIVE += 2.5
+			PLAYER_PARTY.NATIONALIST += 0.5
+		elif choice == 2:
+			PLAYER_PARTY.LIBERAL += 1.5
+			PLAYER_PARTY.SOCIALIST += 1.0
+			PLAYER_PARTY.NATIONALIST -= 2.5
+			PLAYER_PARTY.CAPITALIST += 1.5 # capitalists support government investment
+			print("Yesterday, there was a new political rally: Minorites for " + NAME + ".")
+
+		for party in PARTIES:
+			if party.social <= -4:
+				print(" " + PARTY + " made a statement in support of civil rights.")
 	input("$ Press enter to continue: ")
 	print()
 	
@@ -187,7 +211,7 @@ for party in PARTIES:
 	for _ in range(random.randint(100, 200)):
 		economy = party.economy + random.randint(-2, 2)
 		social = party.social + random.randint(-2, 2)
-		voter = Voter(economy, social)
+		voter = Voter(party.archetype, economy, social)
 		VOTERS.append(voter)
 		VOTER_ARCHETYPES[party.archetype] += 1 # for info, later
 # generate loyalists for a "ghost party"
@@ -195,7 +219,7 @@ archetype = random.choice(available_archetypes)
 for _ in range(random.randint(25, 100)):
 	economy = ARCHETYPES[archetype][0]
 	social = ARCHETYPES[archetype][1]
-	voter = Voter(economy, social)
+	voter = Voter(archetype, economy, social)
 	VOTERS.append(voter)
 	VOTER_ARCHETYPES[archetype] += 1
 # generate people without a partisan agenda
@@ -204,7 +228,7 @@ for _ in range(random.randint(350, 500)):
 	archetype = random.choice(archetypes)
 	economy = ARCHETYPES[archetype][0]
 	social = ARCHETYPES[archetype][1]
-	voter = Voter(economy, social)
+	voter = Voter(archetype, economy, social)
 	VOTERS.append(voter)
 	VOTER_ARCHETYPES[archetype] += 1
 # extra liberals and conservatives
@@ -212,14 +236,14 @@ for _ in range(100):
 	archetype = random.choice(("Liberal", "Conservative"))
 	economy = ARCHETYPES[archetype][0]
 	social = ARCHETYPES[archetype][1]
-	voter = Voter(economy, social)
+	voter = Voter(archetype, economy, social)
 	VOTERS.append(voter)
 	VOTER_ARCHETYPES[archetype] += 1
 # finally, true independents
 for _ in range(random.randint(75, 150)):
 	economy = random.randint(-10, 10)
 	social = random.randint(-10, 10)
-	voter = Voter(economy, social, independent=True)
+	voter = Voter("Independent", economy, social, independent=True)
 	VOTERS.append(voter)
 	VOTER_ARCHETYPES["Independent"] += 1
 # print voter demographics

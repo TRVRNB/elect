@@ -27,7 +27,7 @@ NOUN = { # nouns for random party names
 "Conservative": ("Guard", "Continuity", "Engine", "World", "Land", "Constitution", COUNTRY),
 "Capitalist": ("Trade", "West", "Liberal", "Cash", "Money", "Bank", "Economy", "Privatization"),
 "Socialist": ("Equity", "Labor", "Welfare", "Life", "Health", "Education", "Ideal", "Socialism"),
-"Communist": ("Revolution", "Communism", "Tax", "Standard", "State", "Nationalization", "Comrade"),
+"Communist": ("Revolution", "Communism", "Tax", "Standards", "State", "Nationalization", "Comrade"),
 }
 
 MOTTOS = { # party mottos, these do not have ending punctuation so they can be spoken in different contexts
