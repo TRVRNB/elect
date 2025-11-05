@@ -146,30 +146,30 @@ def do_event(event):
 			PLAYER_PARTY.move_politics(4.0, social=10)
 			print("Everyone hated that. Why would you ever say that?")
 			
-		elif event == "stance_economy":
-			print("You must decide your party's stance on the economy. You can prioritize agricultural growth, industrial growth, or give tax credits to businesses.")
-			choice = dialogue((
-			"Agriculture will improve living standard and farmer rights",
-			"Industry will propel economic growth and create jobs",
-			"The world runs on private business, so let's give back",
-			))
-			COMPLETED_EVENTS[event] = choice
-			if choice == 1:
-				PLAYER_PARTY.CLASS1 += 3.0
-				PLAYER_PARTY.move_politics(1.5, economy=-10)
-				print("A new 'farmers for' " + NAME.split()[len(NAME.split())-1] + " ad aired during a sports game, without your input.")
-			elif choice == 2:
-				PLAYER_PARTY.CLASS2 += 3.0
-				PLAYER_PARTY.move_politics(1.5, economy=-5)
-				print("The middle-class rallies behind your promise, with over 20,000 attending.")
-			elif choice == 3:
-				# by far the most polarizing of the 3 options, making a clear pro-business stance
-				PLAYER_PARTY.SOCIALIST -= 2.5
-				PLAYER_PARTY.COMMUNIST -= 4.5
-				PLAYER_PARTY.CAPITALIST += 3.0
-				PLAYER_PARTY.CLASS3 += 3.0
-				PLAYER_PARTY.move_politics(2.5, economy=6)
-				print("Business leaders praise you. Famous oligarch Leon Tusk promises to offer some funds for your campaign.")
+	elif event == "stance_economy":
+		print("You must decide your party's stance on the economy. You can prioritize agricultural growth, industrial growth, or give tax credits to businesses.")
+		choice = dialogue((
+		"Agriculture will improve living standard and farmer rights",
+		"Industry will propel economic growth and create jobs",
+		"The world runs on private business, so let's give back",
+		))
+		COMPLETED_EVENTS[event] = choice
+		if choice == 1:
+			PLAYER_PARTY.CLASS1 += 3.0
+			PLAYER_PARTY.move_politics(1.5, economy=-10)
+			print("A new 'farmers for' " + NAME.split()[len(NAME.split())-1] + " ad aired during a sports game, without your input.")
+		elif choice == 2:
+			PLAYER_PARTY.CLASS2 += 3.0
+			PLAYER_PARTY.move_politics(1.5, economy=-5)
+			print("The middle-class rallies behind your promise, with over 20,000 attending.")
+		elif choice == 3:
+			# by far the most polarizing of the 3 options, making a clear pro-business stance
+			PLAYER_PARTY.SOCIALIST -= 2.5
+			PLAYER_PARTY.COMMUNIST -= 4.5
+			PLAYER_PARTY.CAPITALIST += 3.0
+			PLAYER_PARTY.CLASS3 += 3.0
+			PLAYER_PARTY.move_politics(2.5, economy=6)
+			print("Business leaders praise you. Famous oligarch Leon Tusk promises to offer some funds for your campaign.")
 
 	elif event == "stance_minority":
 		print("The minorities in " + COUNTRY + " have often been oppresed and persecuted, and only recently has the situation started to improve. They are still cold towards conservative and authoritarian parties. You can declare a stance, or you can remain neutral.")
