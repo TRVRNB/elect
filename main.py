@@ -158,16 +158,19 @@ def do_event(event):
 			PLAYER_PARTY.SOCIALIST -= 1.0
 			PLAYER_PARTY.CONSERVATIVE += 2.5
 			PLAYER_PARTY.NATIONALIST += 0.5
+			PLAYER_PARTY.move_politics(0.25, social=10)
 		elif choice == 2:
 			PLAYER_PARTY.LIBERAL += 1.5
 			PLAYER_PARTY.SOCIALIST += 1.0
 			PLAYER_PARTY.NATIONALIST -= 2.5
 			PLAYER_PARTY.CAPITALIST += 1.5 # capitalists support government investment
+			PLAYER_PARTY.move_politics(1.5, social=-6)
+			PLAYER_PARTY.move_politics(0.5, economy=-2)
 			print("Yesterday, there was a new political rally: Minorites for " + NAME + ".")
 
 		for party in PARTIES:
 			if party.social <= -4:
-				print(" " + PARTY + " made a statement in support of civil rights.")
+				print(party.name + " made a statement in support of civil rights.")
 	input("$ Press enter to continue: ")
 	print()
 	
