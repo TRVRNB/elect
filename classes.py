@@ -94,7 +94,7 @@ class Party():
 	def generate_party_leader(self):
 		# generates a name for the party's leader
 		first = random.choice(("Marcel", "Frens", "John", "Anita", "Lucian", "Alvin", "Kesaro", "Lileas", "Nia", "Gloria", "George", "Peter", "Monty", "Walter", "Remus", "Victor", "Alma", "Emerich", "Leon", "Patricio", "Serge", "Clark", "Manual", "Kennedy"))
-		last = random.choice(("Jabĺonski", "Johnson", "Ricter", "Smolak", "Python", "Hegel", "Kibener", "Smith", "Antony", "Wisci", "Washington", "Starmer", "Monsieur", "Capon", "Rayne", "Macron"))
+		last = random.choice(("Jabłonski", "Johnson", "Ricter", "Smolak", "Python", "Hegel", "Kibener", "Smith", "Antony", "Wisci", "Washington", "Starmer", "Monsieur", "Capon", "Rayne", "Macron"))
 		if random.randint(1, 7) == 1:
 			last = {"Liberal": "Clavin", "Nationalist": "White", "Conservative": "Tory", "Capitalist": "Tusk", "Socialist": "Marx", "Communist": "Saltin"}[self.archetype]
 		return first + " " + last

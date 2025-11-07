@@ -191,7 +191,7 @@ def do_event(event):
 			PLAYER_PARTY.LIBERAL += 1.5
 			PLAYER_PARTY.SOCIALIST += 1.0
 			PLAYER_PARTY.NATIONALIST -= 2.5
-			PLAYER_PARTY.CAPITALIST += 1.5 # capitalists support government investment
+			PLAYER_PARTY.CAPITALIST += 1.5 # "government investment drives capital"
 			PLAYER_PARTY.MINORITY += 1.0
 			PLAYER_PARTY.move_politics(1.5, social=-6)
 			PLAYER_PARTY.move_politics(0.5, economy=-2)
@@ -205,7 +205,7 @@ def do_event(event):
 			PLAYER_PARTY.NATIONALIST -= 3.5
 			PLAYER_PARTY.CLASS1 += 2.5
 			PLAYER_PARTY.MINORITY += 3.0
-			PLAYER_PARTY.CAPITALIST -= 2.0 # capitalists support government investment
+			PLAYER_PARTY.CAPITALIST -= 2.0 # "government investment drives capital"
 			PLAYER_PARTY.move_politics(3.0, social=-10, economy=-10)
 			print("Yesterday, there was a new political rally: Minorites for " + NAME + ".")			
 		elif choice == 4:
@@ -220,6 +220,72 @@ def do_event(event):
 		for party in PARTIES:
 			if party.social <= -4:
 				print(party.name + " made a statement in support of civil rights.")
+		
+	elif event == "stance_tax":
+		print("Now, voters want to know your stance on taxes. Conservatives and capitalists want tax cuts, liberals and nationalists want the status quo, and socialists and communists want a tax increase, specifically for the rich. You don't have to make a stance, but some more radical factions will be concerned. You also don't have to be completely honest.")
+		choice = dialogue((
+		"(refrain from taking any stance)",
+		"Taxes will be lowered",
+		"Tax structure will not be changed",
+		"Eat the rich, through tax",
+		"Taxes shall be increased across the board to fund our government",
+		))
+		COMPLETED_EVENTS[event] = choice
+		if choice == 1:
+			PLAYER_PARTY.COMMUNIST -= 1.5
+			PLAYER_PARTY.NATIONALIST -= 1.0
+			PLAYER_PARTY.CAPITALIST -= 1.0
+			PLAYER_PARTY.move_politics(1.0, economy=0)
+			print("Nobody pays much attention to your campaign, for better or for worse.")
+		elif choice == 2:
+			PLAYER_PARTY.COMMUNIST -= 3.5
+			PLAYER_PARTY.SOCIALIST -= 2.0
+			PLAYER_PARTY.CAPITALIST += 2.5
+			PLAYER_PARTY.CONSERVATIVE += 1.5
+			PLAYER_PARTY.CLASS1 += 1.0
+			PLAYER_PARTY.CLASS2 += 1.0
+			PLAYER_PARTY.CLASS3 += 2.5
+			PLAYER_PARTY.move_politics(2.0, economy=10)
+			print("Your populist message appeals to all demographics, except the economic left.")
+		elif choice == 3:
+			PLAYER_PARTY.COMMUNIST -= 2.5
+			PLAYER_PARTY.SOCIALIST -= 1.0
+			PLAYER_PARTY.LIBERAL += 1.5
+			PLAYER_PARTY.NATIONALIST += 1.0
+			PLAYER_PARTY.CLASS1 -= 0.5
+			PLAYER_PARTY.CLASS3 += 0.5
+			PLAYER_PARTY.move_politics(1.5, economy=2)
+			print("Many seem content. Others wanted change, but the middle and upper-class are glad for the stability.")
+		elif choice == 4:
+			PLAYER_PARTY.COMMUNIST += 1.0
+			PLAYER_PARTY.SOCIALIST += 2.5
+			PLAYER_PARTY.LIBERAL += 0.5
+			PLAYER_PARTY.NATIONALIST -= 1.0
+			PLAYER_PARTY.CONSERVATIVE -= 1.5
+			PLAYER_PARTY.CAPITALIST -= 5.5
+			PLAYER_PARTY.CLASS1 += 1.5
+			PLAYER_PARTY.CLASS3 -= 3.5
+			PLAYER_PARTY.move_politics(2.5, economy=-6)
+			print("Your anti-rich message appeals to everyone... except the rich, along with capitalists and conservatives. The lower-class approves of your proposal.")
+		elif choice == 5:
+			PLAYER_PARTY.COMMUNIST += 5.0
+			PLAYER_PARTY.SOCIALIST += 1.5
+			PLAYER_PARTY.LIBERAL -= 2.0
+			PLAYER_PARTY.NATIONALIST += 1.0 # "it is your natural duty to help the state"
+			PLAYER_PARTY.CONSERVATIVE -= 3.0
+			PLAYER_PARTY.CAPITALIST -= 3.5
+			PLAYER_PARTY.CLASS1 -= 1.0
+			PLAYER_PARTY.CLASS2 -= 1.5
+			PLAYER_PARTY.CLASS3 -= 1.0 # "wealth is relative, so it could be worse"
+			PLAYER_PARTY.move_politics(4.5, economy=-10)
+		
+
+		for party in PARTIES:
+				if party.economy <= -4:
+					print(party.leader + " of the " + party.name " pledges to tax the rich.")
+				elif party.economy >= 4 or party.archetype == "Conservative":
+					print(party.leader + " pledges to lower taxes.")
+					
 	input("$ Press enter to continue: ")
 	print()
 	

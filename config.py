@@ -9,7 +9,7 @@ ARCHETYPES = { # actual parties will vary
 "Conservative": (0, 4), # centrist/traditionalist
 "Capitalist": (6, 0), # pro-west/socially neutral
 "Socialist": (-4, -6), # liberal/planned economy
-"Communist": (-8, 4), # pro-east/illiberal
+"Communist": (-9, 4), # pro-east/illiberal
 }
 
 ADJECTIVE = { # adjectives for random party names
