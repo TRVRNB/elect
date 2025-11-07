@@ -34,6 +34,10 @@ class Party():
 		self.leader = leader
 		if leader == None:
 			self.leader = self.generate_party_leader()	
+		if "party" in self.name.lower():
+			self.leader_full_title = self.leader + " of the " + self.name
+		else:
+			self.leader_full_title = self.leader + " of " + self.name
 		# effects that change over the span of the game
 		self.charisma = 0
 		self.scandal = 0

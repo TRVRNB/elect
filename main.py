@@ -46,7 +46,7 @@ def do_event(event):
 	if event == "stance_lavitia":
 		print("A neighboring country known as Lavitia has been cracking down on 'traitors' lately, imprisoning civil rights leaders. You must decide the party's official stance.")
 		choice = dialogue((
-		"We must grant refuge to victims of Renberg's oppression",
+		"We must grant refuge to victims of Lavitia's oppression",
 		"Their politics are their business",
 		"We will join them in this endeavor! Viva Lavitia!",
 		))
@@ -74,7 +74,7 @@ def do_event(event):
 			text = "You are seen as tyrannical."
 			for party in PARTIES:
 				if party.social <= -4:
-					text += " " + party.name + " denounces you."
+					text += " " + party.leader_full_title + " denounces you."
 			print(text)
 		
 	elif event == "stance_welfare":
@@ -269,7 +269,7 @@ def do_event(event):
 			print("Your anti-rich message appeals to everyone... except the rich, along with capitalists and conservatives. The lower-class approves of your proposal.")
 		elif choice == 5:
 			PLAYER_PARTY.COMMUNIST += 5.0
-			PLAYER_PARTY.SOCIALIST += 1.5
+			PLAYER_PARTY.SOCIALIST += 2.0
 			PLAYER_PARTY.LIBERAL -= 2.0
 			PLAYER_PARTY.NATIONALIST += 1.0 # "it is your natural duty to help the state"
 			PLAYER_PARTY.CONSERVATIVE -= 3.0
@@ -278,14 +278,13 @@ def do_event(event):
 			PLAYER_PARTY.CLASS2 -= 1.5
 			PLAYER_PARTY.CLASS3 -= 1.0 # "wealth is relative, so it could be worse"
 			PLAYER_PARTY.move_politics(4.5, economy=-10)
-		
-
+			print("Most are unhappy with this, except for socialists and communists. Weirdly, nationalists have also been surprisingly supportive.")
 		for party in PARTIES:
 				if party.economy <= -4:
-					print(party.leader + " of the " + party.name " pledges to tax the rich.")
+					print(party.leader_full_title + " pledges to tax the rich.")
 				elif party.economy >= 4 or party.archetype == "Conservative":
-					print(party.leader + " pledges to lower taxes.")
-					
+					print(party.leader_full_title + " pledges to lower taxes.")
+
 	input("$ Press enter to continue: ")
 	print()
 	
