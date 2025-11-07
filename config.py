@@ -3,6 +3,8 @@ COUNTRY = "Wrathia" # name of the country
 PARTY_COUNT = 3 # how many parties there should be, excluding the player
 TOLERANCE = 2.5 # how much opinion should be lost per point on the political compass apart
 
+VP_NAMES = ("Lucian Populise", "Chloe Kandaggier", "Patricia Raymonds", "Saul Greene") # they always go in this order
+
 ARCHETYPES = { # actual parties will vary
 "Liberal": (2, -6), # centrist/freedom/justice
 "Nationalist": (3, 9), # right-wing/populist/reactionary/racist

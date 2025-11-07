@@ -20,7 +20,7 @@ print()
 
 COUNTRY = config.COUNTRY
 ARCHETYPES = config.ARCHETYPES
-
+MONEY = 5
 PARTIES = []
 
 def dialogue(choices):
@@ -70,7 +70,7 @@ def do_event(event):
 			PLAYER_PARTY.NATIONALIST += 1.25
 			PLAYER_PARTY.COMMUNIST += 0.25
 			PLAYER_PARTY.CAPITALIST -= 0.5
-			PLAYER_PARTY.move_politics(3.0, social=10)
+			PLAYER_PARTY.move_politics(5.0, social=10)
 			text = "You are seen as tyrannical."
 			for party in PARTIES:
 				if party.social <= -4:
@@ -409,3 +409,53 @@ for event in events.INTRO_EVENTS:
 # now, do these events
 for event in EVENT_QUEUE:
 	do_event(event)
+# VP selection
+print("Now, you must pick your running mate!")
+print("Once elected, this will be your Vice President. This has no bearing on your policies.")
+input("$ Press enter to continue: ")
+print()
+choice = dialogue((
+config.VP_NAMES[0] + ", who excels at making candidates likeable",
+config.VP_NAMES[1] + ", who is great at fabricating scandals",
+config.VP_NAMES[2] + ", who will keep the media on your side",
+config.VP_NAMES[3] + ", who gathers lots of funds for your campaign",
+))
+VP = choice
+VP_NAME = config.VP_NAMES[choice-1]
+print()
+print(VP + " agrees to run with you.")
+input("$ Press enter to continue: ")
+
+if VP == 4:
+	print(VP_NAME + ": Our financials are very important to this election, which is why I have prepared some PACs to donate:")
+else:
+	print(VP_NAME + ": We need funding to win. Here is the list of organizations who will support us:")
+input("$ Press enter to continue: ")
+if PLAYER_PARTY.social >= 7.5:
+	print(VP_NAME + ": United " + COUNTRY + " Group has donated ₩2,000,000 in support of our nationalist policies.")
+	MONEY += 4
+	input("$ Press enter to continue: ")
+	print()
+if -2 < PLAYER_PARTY.economy < 2 and PLAYER_PARTY.social >= 3:
+	print(VP_NAME + ": Old Guard of " + COUNTRY + " pledged to donate ₩2,500,000 because of our conservative stance.")
+	MONEY += 5
+	input("$ Press enter to continue: ")
+	print()
+if "stance_economy" in COMPLETED_EVENTS:
+	if COMPLETED_EVENTS["stance_economy"] == 3:
+		print(VP_NAME + ": Leon Tusk donated ₩3,500,000 worth of Newton stock to our campaign.")
+		MONEY += 7
+		input("$ Press enter to continue: ")
+		print()
+if VP == 4:
+	print(VP_NAME + ": The " + COUNTRY + " Business Council has voted to donate ₩4,000,000 to your campaign, due to my influence in the group.")
+	MONEY += 8
+	input("$ Press enter to continue: ")
+	print()
+if PLAYER_PARTY.social <= -4:
+	print(VP_NAME + ": New Hope for " + COUNTRY + " donated ₩1,500,000 in support of your socially-progressive ideals.")
+	MONEY += 3
+	input("$ Press enter to continue: ")
+	print()
+
+
