@@ -157,7 +157,8 @@ def do_event(event):
 		if choice == 1:
 			PLAYER_PARTY.CLASS1 += 3.0
 			PLAYER_PARTY.move_politics(1.5, economy=-10)
-			print("A new 'farmers for' " + NAME.split()[len(NAME.split())-1] + " ad aired during a sports game, without your input.")
+			print("A new 'Farmers for " + NAME.split()[len(NAME.split())-1] + "' ad aired during a sports game, without your input.")
+			PLAYER_PARTY.CHARISMA += 0.75
 		elif choice == 2:
 			PLAYER_PARTY.CLASS2 += 3.0
 			PLAYER_PARTY.move_politics(1.5, economy=-5)
@@ -238,7 +239,7 @@ def do_event(event):
 			PLAYER_PARTY.move_politics(1.0, economy=0)
 			print("Nobody pays much attention to your campaign, for better or for worse.")
 		elif choice == 2:
-			PLAYER_PARTY.COMMUNIST -= 3.5
+			PLAYER_PARTY.COMMUNIST -= 7.5
 			PLAYER_PARTY.SOCIALIST -= 2.0
 			PLAYER_PARTY.CAPITALIST += 2.5
 			PLAYER_PARTY.CONSERVATIVE += 1.5
@@ -423,39 +424,287 @@ config.VP_NAMES[3] + ", who gathers lots of funds for your campaign",
 VP = choice
 VP_NAME = config.VP_NAMES[choice-1]
 print()
-print(VP + " agrees to run with you.")
+print(VP_NAME + " agrees to run with you.")
 input("$ Press enter to continue: ")
-
+# earlygame donations
 if VP == 4:
 	print(VP_NAME + ": Our financials are very important to this election, which is why I have prepared some PACs to donate:")
 else:
 	print(VP_NAME + ": We need funding to win. Here is the list of organizations who will support us:")
 input("$ Press enter to continue: ")
-if PLAYER_PARTY.social >= 7.5:
-	print(VP_NAME + ": United " + COUNTRY + " Group has donated ₩2,000,000 in support of our nationalist policies.")
+print()
+if PLAYER_PARTY.social >= 5.5:
+	print(VP_NAME + ": United " + COUNTRY + " Group has donated ₩20,000,000 in support of our right-wing policies.")
 	MONEY += 4
 	input("$ Press enter to continue: ")
-	print()
-if -2 < PLAYER_PARTY.economy < 2 and PLAYER_PARTY.social >= 3:
-	print(VP_NAME + ": Old Guard of " + COUNTRY + " pledged to donate ₩2,500,000 because of our conservative stance.")
+if PLAYER_PARTY.CONSERVATIVE >= 3:
+	print(VP_NAME + ": Old Guard of " + COUNTRY + " pledged to donate ₩25,000,000 because of our conservative stance.")
 	MONEY += 5
 	input("$ Press enter to continue: ")
-	print()
 if "stance_economy" in COMPLETED_EVENTS:
 	if COMPLETED_EVENTS["stance_economy"] == 3:
-		print(VP_NAME + ": Leon Tusk donated ₩3,500,000 worth of Newton stock to our campaign.")
+		print(VP_NAME + ": Leon Tusk donated ₩35,000,000 worth of Newton stock to our campaign, as he promised.")
 		MONEY += 7
+		PLAYER_PARTY.SCANDAL += 1.0
 		input("$ Press enter to continue: ")
-		print()
 if VP == 4:
-	print(VP_NAME + ": The " + COUNTRY + " Business Council has voted to donate ₩4,000,000 to your campaign, due to my influence in the group.")
+	print(VP_NAME + ": The " + COUNTRY + " Business Council has voted to donate ₩40,000,000 to " + PLAYER_PARTY.name + ", due to my influence in the group.")
 	MONEY += 8
 	input("$ Press enter to continue: ")
-	print()
-if PLAYER_PARTY.social <= -4:
-	print(VP_NAME + ": New Hope for " + COUNTRY + " donated ₩1,500,000 in support of your socially-progressive ideals.")
+if PLAYER_PARTY.LIBERAL >= 4 or PLAYER_PARTY.SOCIALIST >= 5:
+	print(VP_NAME + ": New Hope for " + COUNTRY + " donated ₩15,000,000 in support of your socially-progressive ideals.")
 	MONEY += 3
 	input("$ Press enter to continue: ")
-	print()
+if PLAYER_PARTY.CLASS2 >= 4:
+	print(VP_NAME + ": We have received ₩25,000,000 cumulatively from voter donations. This is great news for our popularity.")
+	MONEY += 5
+	input("$ Press enter to continue: ")
+if "stance_lavitia" in COMPLETED_EVENTS:
+	if COMPLETED_EVENTS["stance_lavitia"] == 3:
+		print(VP_NAME + ": Devin Wallace, Chancellor of Lavitia has discreetly given the equivalent of ₩20,000,000 to our campaign, for obvious reasons.")
+		MONEY += 4
+		input("$ Press enter to continue: ")
+		if VP != 3:
+			print(VP_NAME + ": Honestly, I'm worried about this. There is no way we can keep a donation this big, especially from such a dictatorial country, from the press.")
+			PLAYER_PARTY.SCANDAL += 3.0
+		else:
+			print(VP_NAME + ": This might be difficult, but I will make sure my media mogul friends never look into this.")
+		input("$ Press enter to continue: ")
+def formatted_cash():
+	# format cash to fit the game style
+	return "₩" + str(MONEY*5) + ",000,000"
+# print earlygame donations
+print()
+print(VP_NAME + ": So far, we have earned about " + formatted_cash() + ".")
+input("$ Press enter to continue: ")
+if 12 > MONEY:
+	print(VP_NAME + ": This is bad. We can't rely on media campaigns or bribes to win this election.")
+elif 18 > MONEY:
+	print(VP_NAME + ": Not great, not terrible.")
+	input("$ Press enter to continue: ")
+	print(VP_NAME + ": Which leaves room for a miracle.")
+else:
+	print(VP_NAME + ": ...which is pretty amazing! We have lots to spend.")
+input("$ Press enter to continue: ")
+print(VP_NAME + ": Any thoughts?")
+print()
+choice = dialogue((
+"Thanks for your help!",
+"We need more money to win this election",
+"Time to focus on our campaign",
+))
+if choice == 1:
+	if VP == 4:
+		print(VP_NAME + ": You're welcome. I'm sure you're already happy you chose me.")
+	else:
+		print(VP_NAME + ": I had nothing to do with this... I just joined the campaign.")
+elif choice == 2:
+	if MONEY >= 18:
+		print(VP_NAME + ": I'm not sure I follow. We have more than we need already!")
+	else:
+		print(VP_NAME + ": Agreed.")
+elif choice == 3:
+	if VP == 1:
+		print(VP_NAME + ": That's what I'm here for!")
+	else:
+		print(VP_NAME + ": Yes, let's.")
+input("$ Press enter to continue: ")
+print()
+# PHASE 1
+print("A few weeks later...")
+input("$ Press enter to continue: ")
+print(VP_NAME + ": The election is in 10 months. Let's call this Phase 1.")
+input("$ Press enter to continue: ")
+# say the highest chances of winning
+highest_archetype = ""
+second_place = ""
+archetype_max = -100
+archetype_opinions = {
+"Liberal": PLAYER_PARTY.LIBERAL,
+"Nationalist": PLAYER_PARTY.NATIONALIST,
+"Conservative": PLAYER_PARTY.CONSERVATIVE,
+"Capitalist": PLAYER_PARTY.CAPITALIST,
+"Socialist": PLAYER_PARTY.SOCIALIST,
+"Communist": PLAYER_PARTY.COMMUNIST,
+}
+for archetype in list(ARCHETYPES.keys()):
+	if archetype_opinions[archetype] >= archetype_max:
+		if archetype in available_archetypes:
+			second_place = highest_archetype
+			highest_archetype = archetype
+			archetype_max = archetype_opinions[archetype]
+if second_place == "":
+	archetype_max = -100
+	for archetype in list(ARCHETYPES.keys()):
+		if archetype_opinions[archetype] >= archetype_max and archetype != highest_archetype:
+			second_place = archetype
+if VP != 1:
+	print(VP_NAME + ": This may not be my area of expertise, but I would recommend pandering to " + highest_archetype.lower() + "s.")
+else:
+	print(VP_NAME + ": You would be wise to pander to " + highest_archetype.lower() + "s and " + second_place.lower() + "s. That's my professional opinion.")
+input("$ Press enter to continue: ")
+print()
+# media campaign time
+# first, determine other parties' campaign funding:
+print(VP_NAME + ": Here's a report on the other parties' media campaigns:")
+input("$ Press enter to continue: ")
+for party in PARTIES:
+	campaign_budget = random.randint(1, 3)
+	if party.archetype == "Capitalist":
+		campaign_budget = 3
+	if campaign_budget == 1:
+		print(VP_NAME + ": " + party.name + ", led by " + party.leader + ", is investing in a small campaign.")
+		party.CHARISMA += 3.0
+	if campaign_budget == 2:
+		print(VP_NAME + ": " + party.name + ", led by " + party.leader + ", is investing in a midsize campaign.")
+		party.CHARISMA += 5.0
+	if campaign_budget == 3:
+		print(VP_NAME + ": " + party.name + ", led by " + party.leader + ", is investing in a massive campaign!")
+		party.CHARISMA += 7.0
+	input("$ Press enter to continue: ")
+print(VP_NAME + ": We have our work cut out for us.")
+input("$ Press enter to continue: ")
+print()
+# player media campaign
+if 12 > MONEY:
+	print(VP_NAME + ": We can start our media campaign, now... though we may have to keep it small.")
+else:
+	print(VP_NAME + ": Time to get to work on our media campaign! This will heavily affect our public image, so choose carefully.")
+input("$ Press enter to continue: ")
+if VP != 1: # VP 1 gets a unique, modular media strategy
+	print(VP_NAME + ": We can do a small campaign targetting key televisions and radios, or if we have the funds we can do larger, more general campaigns with high-budget editing.")
+	input("$ Press enter to continue: ")
+	print(VP_NAME + ": What are you leaning towards?")
+	available_choices = ["Let's not get involved with these newfangled 'tele-visions'"]
+	if MONEY >= 6:
+		available_choices.append("Small media campaign, don't go too crazy (₩30,000,000)")
+	if MONEY >= 11:
+		available_choices.append("Midsized media campaign, let's win this (₩55,000,000)")
+	if MONEY >= 18:
+		available_choices.append("Huge media campaign, no need for frugality (₩90,000,000)")
+	choice = dialogue(available_choices)
+	if choice == 1:
+		print(VP_NAME + ": They've been around for decades! I'm sure this is the wrong choice...")
+		input("$ Press enter to continue: ")
+		print(VP_NAME + ": Oh well! If the President says it, so it shall be.")
+		PLAYER_PARTY.CHARISMA -= 1.0
+	elif choice == 2:
+		print(VP_NAME + ": Great! I'll see that this is started right away.")
+		MONEY -= 6
+		PLAYER_PARTY.CHARISMA += 3.0
+	elif choice == 3:
+		print(VP_NAME + ": It's great that we can afford this. I'm sure this will greatly help our campaign!")
+		MONEY -= 11
+		PLAYER_PARTY.CHARISMA += 5.0
+	elif choice == 4:
+		if VP == 4:
+			print(VP_NAME + ": There's always use for frugality... but unspent money is just paper.")
+		else:
+			print(VP_NAME + ": Well, this certainly worked out well! " + PLAYER_PARTY.motto + "!")
+			input("$ Press enter to continue: ")
+		PLAYER_PARTY.CHARISMA += 7.0
+		MONEY -= 18
+	if choice != 1 and VP == 3:
+		PLAYER_PARTY.CHARISMA += 1.0
+		print(VP_NAME + ": I'll use my contacts to get this through some 'unbiased' papers, as a cherry on top.")
+		input("$ Press enter to continue: ")
+else: # special media campaign for VP 1
+	print(VP_NAME + ": I have some ideas.")
+	input("$ Press enter to continue: ")
+	if MONEY >= 5: # commercials
+		print()
+		print(VP_NAME + ": First, our TV campaign. This is a no-brainer.")
+		choice = dialogue((
+		"The TV arms race is one that we shouldn't fight",
+		"Yes, let's start with that (₩25,000,000)",
+		))
+		if choice == 1:
+			print(VP_NAME + ": ...........")
+			input("$ Press enter to continue: ")
+		elif choice == 2:
+			MONEY -= 5
+			PLAYER_PARTY.CHARISMA += 3.5
+			print()
+			print(VP_NAME + ": What should our campaign focus on?")
+			choice = dialogue((
+			"Maintaining stability and national security",
+			"Improving quality of life",
+			"Making everyone pay their fair share",
+			"Eliminating enemies of the state",
+			))
+			if choice == 1:
+				PLAYER_PARTY.CONSERVATIVE += 2.5
+				PLAYER_PARTY.CAPITALIST += 1.0
+				PLAYER_PARTY.move_politics(1.5, social=5)
+			elif choice == 2:
+				PLAYER_PARTY.LIBERAL += 1.5
+				PLAYER_PARTY.SOCIALIST += 1.5
+				PLAYER_PARTY.move_politics(1.0, social=-10)
+			elif choice == 3:
+				PLAYER_PARTY.COMMUNIST += 2.0
+				PLAYER_PARTY.SOCIALIST += 2.5
+				PLAYER_PARTY.CAPITALIST -= 1.5
+				PLAYER_PARTY.move_politics(2.5, economy=-10)
+			elif choice == 4:
+				PLAYER_PARTY.COMMUNIST += 1.5
+				PLAYER_PARTY.NATIONALIST += 4.0
+				PLAYER_PARTY.LIBERAL -= 3.0
+				PLAYER_PARTY.SOCIALIST -= 3.0
+				PLAYER_PARTY.CAPITALIST -= 1.0
+				PLAYER_PARTY.move_politics(3.0, social=10)
+		if MONEY >= 4: # sports
+			print()
+			print(VP_NAME + ": Now that that's settled, I have a unique opportunity: an ad campaign during the Ultra Cup.")
+			choice = dialogue((
+			"I hate sports",
+			"Great idea! (₩20,000,000)",
+			))
+			if choice == 1:
+				PLAYER_PARTY.CONSERVATIVE += 2.5
+				print(VP_NAME + ": Fair enough, " + NAME.split()[0] + ".")
+				input("$ Press enter to continue: ")
+			elif choice == 2:
+				MONEY -= 4
+				PLAYER_PARTY.CHARISMA += 3.0
+				print(VP_NAME + ": Of course, I'm the one who made it after all.")
+				input("$ Press enter to continue: ")
+				print()
+				print(VP_NAME + ": Now, we only get one commercial. What should it capitalize on: nostalgia or bravado?")
+				choice = dialogue((
+				"Let's make people nostalgic for the good'oll days",
+				"Bravado, of course. We should stand out from the other candidates, especially " + random.choice(PARTIES).leader,
+				))
+				if choice == 1:
+					PLAYER_PARTY.CHARISMA += 1.0
+				else:
+					PLAYER_PARTY.INDEPENDENT += 3.5
+			if MONEY >= 3: # wine
+				print()
+				print(VP_NAME + ": I have 1 more idea... it's a bit unconventional, and might be a waste of money, but I'll let you be the judge of that.")
+				input("$ Press enter to continue: ")
+				print(VP_NAME + ": You could buy a vineyard, and sell wine using your name! It will really get vinophiles to respect you.")
+				print()
+				choice = dialogue((
+				"I only drink wine from 18" + str(random.randint(11,99)),
+				"I'll drink to that! " + NAME + " Wine, here we come! (₩15,000,000)",
+				))
+				if choice == 1:
+					print(VP_NAME + ": So... no new wine, ever? It was just an idea.")
+					input("$ Press enter to continue: ")
+				elif choice == 2:
+					MONEY -= 3
+					PLAYER_PARTY.CHARISMA += 1.0
+					PLAYER_PARTY.CLASS1 -= 0.5 # pompous/gaudy
+					PLAYER_PARTY.CLASS2 += 1.0
+					PLAYER_PARTY.CLASS3 += 2.0
+					print(VP_NAME + ": Consider it done.")
+					input("$ Press enter to continue: ")
+	print(VP_NAME + ": Let's stop it there. We've made some progress.")
+	input("$ Press enter to continue: ")
+	if PLAYER_PARTY.CHARISMA >= 3.5:
+		print(VP_NAME + ": " + NAME + ", a true president of the people!")
+		input("$ Press enter to continue: ")
 
 
+
+print("That's it for now! This is a work in progress!")

@@ -39,8 +39,8 @@ class Party():
 		else:
 			self.leader_full_title = self.leader + " of " + self.name
 		# effects that change over the span of the game
-		self.charisma = 0
-		self.scandal = 0
+		self.CHARISMA = 0
+		self.SCANDAL = 0
 		self.get_default_opinions()
 		
 	def __eq__(self, other):
