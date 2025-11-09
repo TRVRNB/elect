@@ -528,16 +528,17 @@ archetype_opinions = {
 "Communist": PLAYER_PARTY.COMMUNIST,
 }
 for archetype in list(ARCHETYPES.keys()):
-	if archetype_opinions[archetype] >= archetype_max:
+	if archetype_opinions[archetype] * VOTER_ARCHETYPES[archetype] >= archetype_max:
 		if archetype in available_archetypes:
 			second_place = highest_archetype
 			highest_archetype = archetype
-			archetype_max = archetype_opinions[archetype]
+			archetype_max = archetype_opinions[archetype] * VOTER_ARCHETYPES[archetype]
 if second_place == "":
 	archetype_max = -100
 	for archetype in list(ARCHETYPES.keys()):
 		if archetype_opinions[archetype] >= archetype_max and archetype != highest_archetype:
 			second_place = archetype
+			archetype_max = archetype_opinions[archetype]
 if VP != 1:
 	print(VP_NAME + ": This may not be my area of expertise, but I would recommend pandering to " + highest_archetype.lower() + "s.")
 else:
