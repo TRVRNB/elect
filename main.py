@@ -775,8 +775,12 @@ else:
 		"We'll do a regular investigation (₩20,000,000)", # this still has higher success rate than regular
 		]
 		if MONEY >= 6:
-			choices.append("We'll do the 'special' investigation (₩30,000,000)")
+			choices.append("I like how you think. We'll do the 'special' investigation (₩30,000,000)")
 		choice = dialogue(choices)
+		if choice == 3:
+			print(VP_NAME + ": So do I.")
+			input("$ Press enter to continue: ")
+		
 		if choice == 1:
 			print()
 			print(VP_NAME + ": There is no 'later'. We need to start now.")
