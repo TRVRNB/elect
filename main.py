@@ -742,9 +742,11 @@ else:
 		if choice == 1:
 			print(VP_NAME + ": Taking 'the high road' won't help us against our opponents... but what can I do?")
 			input("$ Press enter to continue: ")
+			print()
 		elif choice == 2:
 			print(VP_NAME + ": A clear refusal. Very well.")
 			input("$ Press enter to continue: ")
+			print()
 		elif choice == 3:
 			print(VP_NAME + ": This money will let us know more about all of our opponents.")
 			input("$ Press enter to continue: ")
