@@ -392,7 +392,7 @@ print()
 # print this party, now
 party = Party("New Party", name=party_name, motto=party_motto, leader=NAME)
 party.archetype = party_name # make a new archetype out of the name (this can have funny results)
-for entry in ("party", "Party", COUNTRY, " of ", " and "):
+for entry in ("party", "Party", COUNTRY, COUNTRY + "n", " of ", " and "):
 	party.archetype = party.archetype.replace(entry, "")
 party.archetype = party.archetype.strip()
 PLAYER_PARTY = party # add this to PARTIES at the end when calculating election results
@@ -574,6 +574,7 @@ input("$ Press enter to continue: ")
 if VP != 1: # VP 1 gets a unique, modular media strategy
 	print(VP_NAME + ": We can do a small campaign targetting key televisions and radios, or if we have the funds we can do larger, more general campaigns with high-budget editing.")
 	input("$ Press enter to continue: ")
+	print()
 	print(VP_NAME + ": What are you leaning towards?")
 	available_choices = ["Let's not get involved with these newfangled 'tele-visions'"]
 	if MONEY >= 6:
@@ -588,26 +589,34 @@ if VP != 1: # VP 1 gets a unique, modular media strategy
 		input("$ Press enter to continue: ")
 		print(VP_NAME + ": Oh well! If the President says it, so it shall be.")
 		PLAYER_PARTY.CHARISMA -= 1.0
+		input("$ Press enter to continue: ")
+		print()
 	elif choice == 2:
 		print(VP_NAME + ": Great! I'll see that this is started right away.")
 		MONEY -= 6
 		PLAYER_PARTY.CHARISMA += 3.0
+		input("$ Press enter to continue: ")
+		print()
 	elif choice == 3:
 		print(VP_NAME + ": It's great that we can afford this. I'm sure this will greatly help our campaign!")
 		MONEY -= 11
 		PLAYER_PARTY.CHARISMA += 5.0
+		input("$ Press enter to continue: ")
+		print()
 	elif choice == 4:
 		if VP == 4:
 			print(VP_NAME + ": There's always use for frugality... but unspent money is just paper.")
 		else:
 			print(VP_NAME + ": Well, this certainly worked out well! " + PLAYER_PARTY.motto + "!")
 			input("$ Press enter to continue: ")
+			print()
 		PLAYER_PARTY.CHARISMA += 7.0
 		MONEY -= 18
 	if choice != 1 and VP == 3:
 		PLAYER_PARTY.CHARISMA += 1.0
 		print(VP_NAME + ": I'll use my contacts to get this through some 'unbiased' papers, as a cherry on top.")
 		input("$ Press enter to continue: ")
+		print()
 else: # special media campaign for VP 1
 	print(VP_NAME + ": I have some ideas.")
 	input("$ Press enter to continue: ")
@@ -621,6 +630,7 @@ else: # special media campaign for VP 1
 		if choice == 1:
 			print(VP_NAME + ": ...........")
 			input("$ Press enter to continue: ")
+			print()
 		elif choice == 2:
 			MONEY -= 5
 			PLAYER_PARTY.CHARISMA += 3.5
@@ -653,7 +663,6 @@ else: # special media campaign for VP 1
 				PLAYER_PARTY.CAPITALIST -= 1.0
 				PLAYER_PARTY.move_politics(3.0, social=10)
 		if MONEY >= 4: # sports
-			print()
 			print(VP_NAME + ": Now that that's settled, I have a unique opportunity: an ad campaign during the Ultra Cup.")
 			choice = dialogue((
 			"I hate sports",
@@ -682,10 +691,10 @@ else: # special media campaign for VP 1
 				print()
 				print(VP_NAME + ": I have 1 more idea... it's a bit unconventional, and might be a waste of money, but I'll let you be the judge of that.")
 				input("$ Press enter to continue: ")
-				print(VP_NAME + ": You could buy a vineyard, and sell wine using your name! It will really get vinophiles to respect you.")
 				print()
+				print(VP_NAME + ": You could buy a vineyard, and sell wine using your name! It will really get vinophiles to respect you.")
 				choice = dialogue((
-				"I only drink wine from 18" + str(random.randint(11,99)),
+				"Sorry, I only drink wine from 18" + str(random.randint(11,99)),
 				"I'll drink to that! " + NAME + " Wine, here we come! (₩15,000,000)",
 				))
 				if choice == 1:
@@ -704,7 +713,94 @@ else: # special media campaign for VP 1
 	if PLAYER_PARTY.CHARISMA >= 3.5:
 		print(VP_NAME + ": " + NAME + ", a true president of the people!")
 		input("$ Press enter to continue: ")
-
-
+	print()
+# intelligence focus
+INTELLIGENCE_FOCUS = None
+INTELLIGENCE_EXTRALEGAL = False
+print(VP_NAME + ": It would also be smart to create intelligence on the other parties, " + NAME.split()[0] + ".")
+input("$ Press enter to continue: ")
+if MONEY < 6 and not (VP == 2 and MONEY >= 4): # check to see if intelligence is even on the table
+	if VP == 2:
+		print(VP_NAME + ": ...However, we cannot afford this. I feel like my talents are being wasted.")
+	else:
+		print(VP_NAME + ": ...However, we cannot afford this. A real mistake, if you ask me.")
+	input("$ Press enter to continue: ")
+else:
+	if VP != 2: # use special intelligence for VP2
+		print(VP_NAME + ": It will be expensive, but could help us understand our opponents better.")
+		input("$ Press enter to continue: ")
+		print(VP_NAME + ": We could also dig up some dirt on them, if you catch my drift...")
+		input("$ Press enter to continue: ")
+		print()
+		print(VP_NAME + ": Should we do it?")
+		choice = dialogue((
+		"Let's take the high road here",
+		"No, let's save our money",
+		"Let's start investigating (₩30,000,000)",
+		))
+		if choice == 1:
+			print(VP_NAME + ": Taking 'the high road' won't help us against our opponents... but what can I do?")
+			input("$ Press enter to continue: ")
+		elif choice == 2:
+			print(VP_NAME + ": A clear refusal. Very well.")
+			input("$ Press enter to continue: ")
+		elif choice == 3:
+			print(VP_NAME + ": This money will let us know more about all of our opponents.")
+			input("$ Press enter to continue: ")
+			print(VP_NAME + ": However, we will also look for dirt on one, specifically.")
+			input("$ Press enter to continue: ")
+			print()
+			print(VP_NAME + ": Which should we focus on?")
+			choices = [] # make list of party name to choose from
+			for PARTY in PARTIES:
+				choices.append(PARTY.name + " and " + PARTY.leader)
+			choice = dialogue(choices)
+			choice -= 1
+			INTELLIGENCE_FOCUS = choice
+			print(VP_NAME + ": " + PARTIES[INTELLIGENCE_FOCUS].leader + "'s secrets will be uncovered.")
+			PARTIES[INTELLIGENCE_FOCUS].SCANDAL += 3.5 # this applies even if nothing is dug up
+			input("$ Press enter to continue: ")
+			print()
+	else: # special intelligence
+		print(VP_NAME + ": I have some P.I. contacts who can speed this process up.")
+		input("$ Press enter to continue: ")
+		print(VP_NAME + ": And... we don't need legal proof. We can always fabricate it.")
+		input("$ Press enter to continue: ")
+		print(VP_NAME + ": We will need to pay a black market service to do that, which is more expensive.")
+		input("$ Press enter to continue: ")
+		print()
+		print(VP_NAME + ": So? What are you thinking?")
+		choices = [
+		"Let's not do this for now",
+		"We'll do a regular investigation (₩20,000,000)", # this still has higher success rate than regular
+		]
+		if MONEY >= 6:
+			choices.append("We'll do the 'special' investigation (₩30,000,000)")
+		choice = dialogue(choices)
+		if choice == 1:
+			print()
+			print(VP_NAME + ": There is no 'later'. We need to start now.")
+			choices[0] = "I said no and that's final"
+			choice = dialogue(choices)
+			if choice == 1:
+				print(VP_NAME + ": Bad decision making.")
+				input("$ Press enter to continue: ")
+		if choice != 1: # if you said yes the first or second time
+			if choice == 3:
+				INTELLIGENCE_EXTRALEGAL = True
+			print()
+			print(VP_NAME + ": And who should our target be?")
+			choices = [] # make list of party name to choose from
+			for PARTY in PARTIES:
+				choices.append(PARTY.name + " and " + PARTY.leader)
+			choice = dialogue(choices)
+			choice -= 1
+			INTELLIGENCE_FOCUS = choice
+			print(VP_NAME + ": " + PARTIES[INTELLIGENCE_FOCUS].leader + " will know no mercy!")
+			PARTIES[INTELLIGENCE_FOCUS].SCANDAL += 5.5 # this applies even if nothing is dug up
+			input("$ Press enter to continue: ")
+			print(VP_NAME + ": " + PLAYER_PARTY.motto + "!")
+			input("$ Press enter to continue: ")
+			print()
 
 print("That's it for now! This is a work in progress!")
