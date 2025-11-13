@@ -1,3 +1,4 @@
+# this provides the Party and Voter classes for elect-main.py
 import random, math, config
 
 COUNTRY = config.COUNTRY
@@ -33,7 +34,7 @@ class Party():
 		# now, generate a party leader (running for president)
 		self.leader = leader
 		if leader == None:
-			self.leader = self.generate_party_leader()	
+			self.leader = self.generate_member_name()
 		if "party" in self.name.lower():
 			self.leader_full_title = self.leader + " of the " + self.name
 		else:
@@ -95,10 +96,10 @@ class Party():
 		return  math.sqrt((p[0] - self.economy)**2 + (p[1] - self.social)**2)
 		
 	
-	def generate_party_leader(self):
+	def generate_member_name(self):
 		# generates a name for the party's leader
-		first = random.choice(("Marcel", "Frens", "John", "Anita", "Lucian", "Alvin", "Kesaro", "Lileas", "Nia", "Gloria", "George", "Peter", "Monty", "Walter", "Remus", "Victor", "Alma", "Emerich", "Leon", "Patricio", "Serge", "Clark", "Manual", "Kennedy"))
-		last = random.choice(("Jabłonski", "Johnson", "Ricter", "Smolak", "Python", "Hegel", "Kibener", "Smith", "Antony", "Wisci", "Washington", "Starmer", "Monsieur", "Capon", "Rayne", "Macron"))
+		first = random.choice(("Marcel", "Frenz", "John", "Anita", "Lord", "Alvin", "Kezaro", "Lileas", "Nia", "Gloria", "George", "Peter", "Monty", "Walter", "Remus", "Victor", "Alma", "Emerich", "Leon", "Patricio", "Serge", "Clark", "Manual", "Kennedy", "Jimbo", "Calvin", "Derek", "Wrazi", "Calazvia", "Paul", "Gordon", "Pierre", "Comte", "Leonardo", "Stanley", "Wanda", "Abenezer", "Stal", "Bruce", "Aaron", "Zizandria", "Razia", "Larry", "Tarquin", "Raymond", "Wrezcela", "Bingo", "Seamus", "Marques", "Sal"))
+		last = random.choice(("Jabłonski", "Johnson", "Ricter", "Smolak", "Python", "Hegel", "Kibener", "Smith", "Antony", "Wisci", "Washington", "Starmer", "Monsieur", "Capon", "Rayne", "Macron", "de Rava", "Nomocresto", "Buendia", "Ignatius", "Binzhia", "Borchst", "Trazvi", "Chavatangakwunua", "Quinoa", "Davis", "Franziska", "Kellus", "Zandervoy", "Garte", "Oudior",))
 		if random.randint(1, 7) == 1:
 			last = {"Liberal": "Clavin", "Nationalist": "White", "Conservative": "Tory", "Capitalist": "Tusk", "Socialist": "Marx", "Communist": "Saltin"}[self.archetype]
 		return first + " " + last

@@ -1,4 +1,4 @@
-# config file
+# config file for elect
 COUNTRY = "Wrathia" # name of the country
 PARTY_COUNT = 3 # how many parties there should be, excluding the player
 TOLERANCE = 2.5 # how much opinion should be lost per point on the political compass apart

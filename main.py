@@ -23,6 +23,15 @@ ARCHETYPES = config.ARCHETYPES
 MONEY = 5
 PARTIES = []
 
+def search_events(event):
+	# look for an event, with error handling
+	global COMPLETED_EVENTS
+	if event in COMPLETED_EVENTS:
+		return COMPLETED_EVENTS[event]
+	else:
+		return 0
+
+
 def dialogue(choices):
 	# get input from the player
 	for i in range(len(choices)):
@@ -67,7 +76,7 @@ def do_event(event):
 			PLAYER_PARTY.SOCIALIST -= 2.75
 			PLAYER_PARTY.LIBERAL -= 2.75
 			PLAYER_PARTY.CONSERVATIVE -= 1.0
-			PLAYER_PARTY.NATIONALIST += 1.25
+			PLAYER_PARTY.NATIONALIST += 2.75
 			PLAYER_PARTY.COMMUNIST += 0.25
 			PLAYER_PARTY.CAPITALIST -= 0.5
 			PLAYER_PARTY.move_politics(5.0, social=10)
@@ -114,6 +123,7 @@ def do_event(event):
 			PLAYER_PARTY.COMMUNIST -= 3.0
 			PLAYER_PARTY.CONSERVATIVE -= 2.75
 			PLAYER_PARTY.CAPITALIST -= 3.25
+			PLAYER_PARTY.NATIONALIST -= 1.5
 			PLAYER_PARTY.CLASS1 += 2.5
 			PLAYER_PARTY.CLASS2 -= 0.5
 			PLAYER_PARTY.CLASS3 -= 4.0
@@ -126,6 +136,7 @@ def do_event(event):
 			PLAYER_PARTY.COMMUNIST -= 3.0
 			PLAYER_PARTY.CONSERVATIVE -= 1.75
 			PLAYER_PARTY.CAPITALIST += 4.0
+			PLAYER_PARTY.NATIONALIST -= 1.5
 			PLAYER_PARTY.CLASS1 -= 4.0
 			PLAYER_PARTY.CLASS2 -= 2.0
 			PLAYER_PARTY.CLASS3 += 3.0
@@ -185,7 +196,7 @@ def do_event(event):
 			PLAYER_PARTY.LIBERAL -= 0.5
 			PLAYER_PARTY.SOCIALIST -= 1.0
 			PLAYER_PARTY.CONSERVATIVE += 2.5
-			PLAYER_PARTY.NATIONALIST += 0.5
+			PLAYER_PARTY.NATIONALIST += 2.5
 			PLAYER_PARTY.MINORITY -= 2.5
 			PLAYER_PARTY.move_politics(0.25, social=10)
 		elif choice == 2:
@@ -199,20 +210,21 @@ def do_event(event):
 			if COMPLETED_EVENTS["stance_lavitia"] != 3:
 				print("Yesterday, there was a new political rally: Minorites for " + NAME + ".")
 		elif choice == 3:
-			PLAYER_PARTY.LIBERAL -= 0.75
+			PLAYER_PARTY.LIBERAL -= 0.75 # equality, not equity
 			PLAYER_PARTY.SOCIALIST += 2.5
 			PLAYER_PARTY.COMMUNIST += 0.5
-			PLAYER_PARTY.CONSERVATIVE -= 1.0
+			PLAYER_PARTY.CONSERVATIVE -= 4.0
 			PLAYER_PARTY.NATIONALIST -= 3.5
 			PLAYER_PARTY.CLASS1 += 2.5
 			PLAYER_PARTY.MINORITY += 3.0
-			PLAYER_PARTY.CAPITALIST -= 2.0 # "government investment drives capital"
+			PLAYER_PARTY.CAPITALIST -= 4.0
 			PLAYER_PARTY.move_politics(3.0, social=-10, economy=-10)
 			print("Yesterday, there was a new political rally: Minorites for " + NAME + ".")			
 		elif choice == 4:
 			PLAYER_PARTY.LIBERAL += 2.0
 			PLAYER_PARTY.SOCIALIST += 1.0
 			PLAYER_PARTY.NATIONALIST -= 2.5
+			PLAYER_PARTY.CONSERVATIVE -= 1.5
 			PLAYER_PARTY.MINORITY += 1.5
 			PLAYER_PARTY.move_politics(1.5, social=-10)
 			if COMPLETED_EVENTS["stance_lavitia"] != 3:
@@ -285,6 +297,44 @@ def do_event(event):
 					print(party.leader_full_title + " pledges to tax the rich.")
 				elif party.economy >= 4 or party.archetype == "Conservative":
 					print(party.leader_full_title + " pledges to lower taxes.")
+	elif event == "stance_political_assassination_otherparty":
+		party = random.choice(PARTIES)
+		name = party.generate_member_name()
+		print(name + ", a MP from " + party.name + ", was assassinated yesterday by a politically-motivated shooter. You can decide a stance.")
+		choice = dialogue((
+		"(refrain from taking any stance)",
+		"Mourn " + name + " and call them a 'comrade' on public TV",
+		"Condemn and denounce the killing, visit their funeral",
+		"Support their murder in a press release",
+		))
+		COMPLETED_EVENTS[event] = choice
+		if choice == 1:
+			PLAYER_PARTY.CONSERVATIVE += 1.0
+			PLAYER_PARTY.move_politics(1.0, social=6)
+			PLAYER_PARTY.INDEPENDENT -= 1.5
+			PLAYER_PARTY.SCANDAL += 0.25
+		elif choice == 2:
+			PLAYER_PARTY.move_politics(3.0, social=party.social, economy=party.economy)
+			PLAYER_PARTY.INDEPENDENT += 1.0
+			PLAYER_PARTY.CHARISMA += 0.5
+			party.CHARISMA += 0.5
+			print(party.leader_full_title + " thanks you.")
+		elif choice == 3:
+			PLAYER_PARTY.INDEPENDENT += 1.5 # seems less politically-motivated
+			PLAYER_PARTY.LIBERAL += 0.5
+			PLAYER_PARTY.SCANDAL -= 1.0
+			print("Your condemnation is received well by independents.")
+		elif choice == 4: # this is an offensive move that also damages the other party
+			PLAYER_PARTY.INDEPENDENT -= 5.0
+			PLAYER_PARTY.NATIONALIST += 1.0
+			PLAYER_PARTY.move_politics(3.0, social=-party.social, economy=-party.economy)
+			PLAYER_PARTY.SCANDAL += 1.0
+			party.SCANDAL += 1.0
+			print("Tensions across the board increase. Other parties and independents are hesitant to work with you.")
+		for party in PARTIES:
+			if party.social <= 4:
+				print(party.leader_full_title + " condemns the killing.")
+				party.INDEPENDENT += 1.5
 
 	input("$ Press enter to continue: ")
 	print()
@@ -433,43 +483,41 @@ else:
 	print(VP_NAME + ": We need funding to win. Here is the list of organizations who will support us:")
 input("$ Press enter to continue: ")
 print()
-if PLAYER_PARTY.social >= 5.5:
-	print(VP_NAME + ": United " + COUNTRY + " Group has donated ₩20,000,000 in support of our right-wing policies.")
+if PLAYER_PARTY.social >= 5.5: # nationalists
+	print(VP_NAME + ": " + COUNTRY + " Proud Youth has donated ₩20,000,000 in support of our right-wing policies.")
 	MONEY += 4
 	input("$ Press enter to continue: ")
-if PLAYER_PARTY.CONSERVATIVE >= 3:
+if PLAYER_PARTY.CONSERVATIVE >= 3: # conservative
 	print(VP_NAME + ": Old Guard of " + COUNTRY + " pledged to donate ₩25,000,000 because of our conservative stance.")
 	MONEY += 5
 	input("$ Press enter to continue: ")
-if "stance_economy" in COMPLETED_EVENTS:
-	if COMPLETED_EVENTS["stance_economy"] == 3:
-		print(VP_NAME + ": Leon Tusk donated ₩35,000,000 worth of Newton stock to our campaign, as he promised.")
-		MONEY += 7
-		PLAYER_PARTY.SCANDAL += 1.0
-		input("$ Press enter to continue: ")
-if VP == 4:
+if search_events("stance_economy") == 3: # oligarch
+	print(VP_NAME + ": Leon Tusk donated ₩35,000,000 worth of Newton stock to our campaign, as he promised.")
+	MONEY += 7
+	PLAYER_PARTY.SCANDAL += 1.0
+	input("$ Press enter to continue: ")
+if VP == 4: # cash VP
 	print(VP_NAME + ": The " + COUNTRY + " Business Council has voted to donate ₩40,000,000 to " + PLAYER_PARTY.name + ", due to my influence in the group.")
 	MONEY += 8
 	input("$ Press enter to continue: ")
-if PLAYER_PARTY.LIBERAL >= 4 or PLAYER_PARTY.SOCIALIST >= 5:
+if PLAYER_PARTY.LIBERAL >= 4 or PLAYER_PARTY.SOCIALIST >= 5 or PLAYER_PARTY.social <= -3: # progressive
 	print(VP_NAME + ": New Hope for " + COUNTRY + " donated ₩15,000,000 in support of your socially-progressive ideals.")
 	MONEY += 3
 	input("$ Press enter to continue: ")
-if PLAYER_PARTY.CLASS2 >= 4:
+if PLAYER_PARTY.CLASS2 >= 4: # middle-class donations
 	print(VP_NAME + ": We have received ₩25,000,000 cumulatively from voter donations. This is great news for our popularity.")
 	MONEY += 5
 	input("$ Press enter to continue: ")
-if "stance_lavitia" in COMPLETED_EVENTS:
-	if COMPLETED_EVENTS["stance_lavitia"] == 3:
-		print(VP_NAME + ": Devin Wallace, Chancellor of Lavitia has discreetly given the equivalent of ₩20,000,000 to our campaign, for obvious reasons.")
-		MONEY += 4
-		input("$ Press enter to continue: ")
-		if VP != 3:
-			print(VP_NAME + ": Honestly, I'm worried about this. There is no way we can keep a donation this big, especially from such a dictatorial country, from the press.")
-			PLAYER_PARTY.SCANDAL += 3.0
-		else:
-			print(VP_NAME + ": This might be difficult, but I will make sure my media mogul friends never look into this.")
-		input("$ Press enter to continue: ")
+if search_events("stance_lavitia") == 3:
+	print(VP_NAME + ": Devin Wallace, Chancellor of Lavitia has discreetly given the equivalent of ₩20,000,000 to our campaign, for obvious reasons.")
+	MONEY += 4
+	input("$ Press enter to continue: ")
+	if VP != 3:
+		print(VP_NAME + ": Honestly, I'm worried about this. There is no way we can keep a donation this big, especially from such a dictatorial country, from the press.")
+		PLAYER_PARTY.SCANDAL += 3.0
+	else:
+		print(VP_NAME + ": This might be difficult, but I will make sure my media mogul friends never look into this.")
+	input("$ Press enter to continue: ")
 def formatted_cash():
 	# format cash to fit the game style
 	return "₩" + str(MONEY*5) + ",000,000"
@@ -609,8 +657,8 @@ if VP != 1: # VP 1 gets a unique, modular media strategy
 			print(VP_NAME + ": There's always use for frugality... but unspent money is just paper.")
 		else:
 			print(VP_NAME + ": Well, this certainly worked out well! " + PLAYER_PARTY.motto + "!")
-			input("$ Press enter to continue: ")
-			print()
+		input("$ Press enter to continue: ")
+		print()
 		PLAYER_PARTY.CHARISMA += 7.0
 		MONEY -= 18
 	if choice != 1 and VP == 3:
@@ -809,5 +857,15 @@ else:
 			print(VP_NAME + ": " + PLAYER_PARTY.motto + "!")
 			input("$ Press enter to continue: ")
 			print()
+# phase 1 events
+EVENT_QUEUE = ["stance_political_assassination_otherparty"] # flush event queue
+for _ in range(9):
+	event = random.choice(events.PHASE1)
+	EVENT_QUEUE.append(event)
+	events.PHASE1.remove(event)
+
+while len(EVENT_QUEUE) > 0:
+	do_event(EVENT_QUEUE[0])
+	EVENT_QUEUE.remove(EVENT_QUEUE[0])
 
 print("That's it for now! This is a work in progress!")
